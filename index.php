@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 use coldstarstudios\Controller;
 use coldstarstudios\Loader;
