@@ -1,0 +1,5 @@
+---
+twig_config:
+  cache: cache/
+  templates: view/
+  auto_reload: 1

@@ -1,0 +1,8 @@
+# It's not needed to set up a database connection.
+---
+db_config:
+  provider: mysql
+  hostname: localhost
+  username: root
+  password: 
+  database: database
