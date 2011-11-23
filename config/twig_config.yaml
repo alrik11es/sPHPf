@@ -1,5 +1,7 @@
 ---
 twig_config:
+  # Remember that this folder needs write permissions
   cache: cache/
   templates: view/
+  # 0 for production environments and 1 for development
   auto_reload: 1

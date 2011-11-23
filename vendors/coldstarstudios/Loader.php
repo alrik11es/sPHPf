@@ -100,16 +100,20 @@ class Loader {
             $Application->setController($Application->url->getController());
             return true;
         } catch (\Exception $e) {
-            //echo '#'.$e->getCode();
-            //echo ' -> ';
-            //echo $e->getMessage();
+            
             $Application->data['error']['code'] = $e->getCode();
             $Application->data['error']['message'] = $e->getMessage();
             $Application->data['error']['file'] = $e->getFile();
-            $view = new \coldstarstudios\Response('errors/application.twig', $Application->data);
-            
-            if($Application->show_response)
-                $view->renderView();
+
+            try{
+                
+                $view = new \coldstarstudios\Response('errors/application.twig', $Application->data);
+                if($Application->show_response)
+                        $view->renderView();
+                
+            } catch (\Exception $z) {
+                echo "Error message: #".$z->getCode()." ---- ".$z->getMessage()." ".$z->getFile();
+            }
             return false;
         }
     }

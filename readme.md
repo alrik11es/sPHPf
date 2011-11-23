@@ -19,7 +19,12 @@ http://sphpf.coldstarstudios.com
 
 ##Changelog
 
+v 1.0.1
+- Added an error in order to know if cache folder is writable or not.
+- Added check-readyness script into the install folder to know if you're ready to use sPHPf.
+
 v 1.0.0
+- First version
 
 ##License
 

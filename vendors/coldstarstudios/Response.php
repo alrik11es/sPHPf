@@ -24,13 +24,16 @@ class Response{
         
         $loader = new \Twig_Loader_Filesystem($data['twig_config']['templates']);
         
+        if(!file_exists($data['twig_config']['cache']) || !is_writable($data['twig_config']['cache']))
+            throw new \Exception("The <b>{$data['twig_config']['cache']}</b> folder must exist and be writable.",
+                    0xFF0002);
+        
         $this->twig = new \Twig_Environment($loader, array(
             'cache' => $data['twig_config']['cache'],
             'auto_reload' => $data['twig_config']['auto_reload']
         ));
         $this->twig->addGlobal('path', new Path());
         $this->twig->addFilter('input', new \Twig_Filter_Function('coldstarstudios\forms\Input::draw'));
-        
     }
     
     // The render is provided by twig
