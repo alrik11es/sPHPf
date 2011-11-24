@@ -32,8 +32,8 @@ class Response{
             'cache' => $data['twig_config']['cache'],
             'auto_reload' => $data['twig_config']['auto_reload']
         ));
+        
         $this->twig->addGlobal('path', new Path());
-        $this->twig->addFilter('input', new \Twig_Filter_Function('coldstarstudios\forms\Input::draw'));
     }
     
     // The render is provided by twig
