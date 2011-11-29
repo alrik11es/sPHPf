@@ -3,6 +3,7 @@ namespace coldstarstudios;
 use coldstarstudios\databases\Connection;
 use coldstarstudios\Request;
 use coldstarstudios\Controller;
+use coldstarstudios\Error;
 
 /**
  * This class is used to load the the main flow of the application.
@@ -21,6 +22,7 @@ class Loader {
     public $controller;
     /** @var Response */
     public $response;
+    
     /// This var allows you to choose if you want to see the response or not.
     public $show_response = true;
     
@@ -101,19 +103,9 @@ class Loader {
             return true;
         } catch (\Exception $e) {
             
-            $Application->data['error']['code'] = $e->getCode();
-            $Application->data['error']['message'] = $e->getMessage();
-            $Application->data['error']['file'] = $e->getFile();
-
-            try{
-                
-                $view = new \coldstarstudios\Response('errors/application.twig', $Application->data);
-                if($Application->show_response)
-                        $view->renderView();
-                
-            } catch (\Exception $z) {
-                echo "Error message: #".$z->getCode()." ---- ".$z->getMessage()." ".$z->getFile();
-            }
+            $error = new \coldstarstudios\Error($Application, $e);
+            $error->response();
+            
             return false;
         }
     }
