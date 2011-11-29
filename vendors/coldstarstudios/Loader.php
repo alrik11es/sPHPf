@@ -80,7 +80,7 @@ class Loader {
         // Once the controller is finded you must look for an action called
         $this->response = $this->controller->$action();
         
-        if(!is_null($this->response) && $this->show_response)
+        if(!is_null($this->response))
             $this->response->renderView();
     }
     
