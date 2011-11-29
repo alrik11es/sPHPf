@@ -21,6 +21,8 @@ http://sphpf.coldstarstudios.com
 
 v 1.0.1
 
+- Added empty index.html in each resource folder.
+
 - Added cache/ folder out of gitignore but without any contents.
 
 - Added production on/off in config. (Shows errors when something fails or not)
