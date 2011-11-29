@@ -1,3 +1,9 @@
 ---
 app_config:
+  
+  #This is the default url of your site, this allows
+  #sPHPf switch pages in the {{path}} var correctly
   default_uri: http://yoursite/sPHPf/
+  
+  #This setting 1/0 is to set the production mode or not.
+  production: 0

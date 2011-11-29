@@ -24,7 +24,7 @@ class Loader {
     public $response;
     
     /// This var allows you to choose if you want to see the response or not.
-    public $show_response = true;
+    public $production = false;
     
     /** @var Aplication path */
     public $path;
@@ -55,7 +55,8 @@ class Loader {
         // Read config file
         $data = \Spyc\Spyc::YAMLLoad($app_config_file);
         $app_config = $data['app_config'];
-            
+        
+        $this->production = $app_config['production'];
         $this->path = $app_config['default_uri'];
     }
     

@@ -21,6 +21,12 @@ http://sphpf.coldstarstudios.com
 
 v 1.0.1
 
+- Added cache/ folder out of gitignore but without any contents.
+
+- Added production on/off in config. (Shows errors when something fails or not)
+
+- Error control is in the new Error class.
+
 - Added an error in order to know if cache folder is writable or not.
 
 - Added check-readyness script into the install folder to know if you're ready to use sPHPf.
