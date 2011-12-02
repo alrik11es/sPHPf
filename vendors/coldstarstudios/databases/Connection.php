@@ -23,23 +23,32 @@ class Connection {
                 return false;
             // Read config file
             $data = \Spyc\Spyc::YAMLLoad($dbase_config_file);
-            $this->conn = $data['db_config'];
+            if(isset($data['db_config']))
+                $this->conn = $data['db_config'];
         }
         
         try{
             // Then create connection
+            if(isset($this->conn['provider']))
             switch($this->conn['provider']){
                 case 'mysql': 
                         $dsn = 'mysql:host='.$this->conn['hostname'].';dbname='.$this->conn['database'];
+                    break;
+                
+                case 'sqlite':
+                        $dsn = 'sqlite:'.$this->conn['database'];
                     break;
             }
         
             // We create RedBean database connection.
             // (This could be easily changed by adding your own library)
-            R::setup($dsn, $this->conn['username'], $this->conn['password']);
+            if(isset($this->conn['username']) && isset($this->conn['password']))
+            {
+                R::setup($dsn, $this->conn['username'], $this->conn['password']);
             
-            if($this->conn['database'] == null)
-                throw new \PDOException ('SQLSTATE[??????] [????] You have to specify a database');
+                if($this->conn['database'] == null)
+                    throw new \PDOException ('SQLSTATE[??????] [????] You have to specify a database');
+            }
             
         }  catch (\PDOException $e){
             $this->exception = $e;

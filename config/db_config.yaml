@@ -1,8 +1,25 @@
-# It's not needed to set up a database connection.
+# To setup a sqlite connection:
+#
+#db_config:
+#  provider: sqlite
+#  username: root
+#  password: prueba
+#  database: file.txt
 ---
-db_config:
-  provider: mysql
-  hostname: localhost
-  username: root
-  password: 
-  database: database
+# To setup a mysql connection:
+#
+#db_config:
+#  provider: mysql
+#  hostname: localhost
+#  username: root
+#  password: 
+#  database: database
+---
+# To setup a postgresql connection:
+#
+#db_config:
+#  provider: mysql
+#  hostname: localhost
+#  username: root
+#  password: 
+#  database: database
