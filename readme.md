@@ -19,6 +19,16 @@ http://sphpf.coldstarstudios.com
 
 ##Changelog
 
+v 1.0.2
+
+- Added support for different upload checks in the application.
+
+- Added support for sqlite database type.
+
+- Changed the main test page title.
+
+- checker.php corrected to allow different checks on install.
+
 v 1.0.1
 
 - Added empty index.html in each resource folder.
