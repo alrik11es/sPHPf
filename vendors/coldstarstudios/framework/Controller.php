@@ -1,6 +1,6 @@
 <?php
 
-namespace coldstarstudios;
+namespace coldstarstudios\framework;
 
 /**
  * This class generates a controller objects that will be used to

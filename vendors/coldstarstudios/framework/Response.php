@@ -1,5 +1,5 @@
 <?php
-namespace coldstarstudios;
+namespace coldstarstudios\framework;
 use coldstarstudios\forms\Input;
 
 /**

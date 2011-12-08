@@ -1,5 +1,5 @@
 <?php
-namespace coldstarstudios;
+namespace coldstarstudios\framework;
 
 /**
  * This class will be used to validate and secure the requests in the framework

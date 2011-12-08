@@ -1,5 +1,5 @@
 <?php
-class Application extends \coldstarstudios\Loader {
+class Application extends \coldstarstudios\framework\Loader {
 
 }
 ?>

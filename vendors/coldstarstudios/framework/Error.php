@@ -1,5 +1,5 @@
 <?php
-namespace coldstarstudios;
+namespace coldstarstudios\framework;
 /**
  * This class is used to create a debug inform system in the app framework.
  * The debug window will appear as a fixed menu in the bottom of the page

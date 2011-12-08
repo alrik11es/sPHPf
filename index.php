@@ -1,7 +1,7 @@
 ﻿<?php
 session_start();
-use coldstarstudios\Controller;
-use coldstarstudios\Loader;
+use coldstarstudios\framework\Loader;
+use coldstarstudios\framework\Controller;
 
 require 'Autoloader.php';
 

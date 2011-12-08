@@ -1,5 +1,5 @@
 <?php
-namespace coldstarstudios;
+namespace coldstarstudios\framework;
 
 /**
  * This class is used to create the application path tag inside the template.

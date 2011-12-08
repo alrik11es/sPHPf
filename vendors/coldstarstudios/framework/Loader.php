@@ -1,9 +1,9 @@
 <?php
-namespace coldstarstudios;
+namespace coldstarstudios\framework;
 use coldstarstudios\databases\Connection;
-use coldstarstudios\Request;
-use coldstarstudios\Controller;
-use coldstarstudios\Error;
+use coldstarstudios\framework\Request;
+use coldstarstudios\framework\Controller;
+use coldstarstudios\framework\Error;
 
 /**
  * This class is used to load the the main flow of the application.

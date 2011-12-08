@@ -1,6 +1,6 @@
 <?php
-namespace coldstarstudios;
-use coldstarstudios\Controller;
+namespace coldstarstudios\framework;
+use coldstarstudios\framework\Controller;
 
 /**
  * This class is used to select what controller is going to be used.
