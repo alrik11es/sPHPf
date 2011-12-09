@@ -6,8 +6,7 @@ namespace coldstarstudios\framework;
  *
  * @author ALRIK
  */
-class Path{
-    
+class Path {
     function __construct() {
         
     }

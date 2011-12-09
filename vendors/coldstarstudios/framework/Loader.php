@@ -14,8 +14,6 @@ class Loader implements interfaces\Loader{
     
     /** @var PDO */
     public $connection;
-    /** @var Url */
-    public $url;
     /** @var Request */
     public $request;
     /** @var Controller */
@@ -42,11 +40,6 @@ class Loader implements interfaces\Loader{
             $this->connection = $conn->create();
         }
         
-        // URL control
-        $this->url = new Url();
-        
-        // Session control
-        
         // Data Request class
         $this->request = new Request();
         
@@ -68,7 +61,9 @@ class Loader implements interfaces\Loader{
      */
     function flow($controller){
         $this->response = $this->exec($controller);
-        $this->render();
+        
+        if(!is_null($this->response))
+            $this->render();
     }
     
     /**
@@ -97,8 +92,7 @@ class Loader implements interfaces\Loader{
      * in the Loader.
      */
     function render(){
-        if(!is_null($this->response))
-            $this->response->renderView();
+        $this->response->renderView();
     }
     
     /**
@@ -107,23 +101,22 @@ class Loader implements interfaces\Loader{
      * The execution of this is conditioned to the application passed and the
      * default controller that it's going to be loaded.
      * 
-     * @param Application $Application
      * @param Controller $default_controller 
      */
-    static function start($Application, $default_controller){
+    static function start($default_controller){
+        $class = '\\'.__CLASS__;
+        $Application = new $class();
         
         // Set main controller
-        $Application->url->default_controller = $default_controller;
+        $Application->request->default_controller = $default_controller;
 
-        // Application error management
         try{
-            $Application->flow($Application->url->getController());
+            $Application->flow($Application->request->getController());
             return true;
         } catch (\Exception $e) {
-            
+            // Application error management
             $error = new \coldstarstudios\Error($Application, $e);
             $error->response();
-            
             return false;
         }
     }

@@ -7,9 +7,11 @@ namespace coldstarstudios\framework\interfaces;
  */
 interface Loader {
     function __construct();
+    
+    static function start($default_controller);
+    
     function flow($controller);
-    function exec($controller);
-    function render();
-    static function start($Application, $default_controller);
+        function exec($controller);
+        function render();
 }
 ?>
