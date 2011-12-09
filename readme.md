@@ -19,7 +19,7 @@ http://sphpf.coldstarstudios.com
 
 ##Changelog
 
-v 1.0.2
+v 1.1.0
 
 - Added support for different upload checks in the application.
 
@@ -28,6 +28,10 @@ v 1.0.2
 - Changed the main test page title.
 
 - checker.php corrected to allow different checks on install.
+
+- Changed the location of the framework files to coldstarstudios\framework namespace.
+
+- Added default favicon.
 
 v 1.0.1
 

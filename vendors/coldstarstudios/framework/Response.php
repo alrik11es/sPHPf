@@ -10,7 +10,7 @@ use coldstarstudios\forms\Input;
  *
  * @author ALRIK
  */
-class Response{
+class Response implements interfaces\Response{
     public $view;
     public $vars = array();
     private $twig;

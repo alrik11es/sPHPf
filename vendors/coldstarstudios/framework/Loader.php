@@ -10,7 +10,7 @@ use coldstarstudios\framework\Error;
  *
  * @author ALRIK
  */
-class Loader {
+class Loader implements interfaces\Loader{
     
     /** @var PDO */
     public $connection;
@@ -37,8 +37,10 @@ class Loader {
     function __construct() {
                 
         // Database connection
-        $conn = new Connection();
-        $this->connection = $conn->create();
+        if(class_exists('Connection')){
+            $conn = new Connection();
+            $this->connection = $conn->create();
+        }
         
         // URL control
         $this->url = new Url();
@@ -61,25 +63,40 @@ class Loader {
     }
     
     /**
-     * Sets any type of controller in the render port.
+     * This method executes the main application flow.
+     * @param Controller $linked_controller 
+     */
+    function flow($controller){
+        $this->response = $this->exec($controller);
+        $this->render();
+    }
+    
+    /**
+     * Executes the controller.
      * @param Controller $linked_controller
      */
-    function setController($linked_controller) {
-        $action = $linked_controller->action;
-        $controller = $linked_controller->name;
-        
-        if(!class_exists($controller))
-            throw new \Exception ('The controller: '.$controller.' hasn\'t been found.');
+    function exec($controller) {
+        $action = $controller->action;
+                
+        if(!class_exists($controller->name))
+            throw new \Exception ('The controller: '.$controller->name.' hasn\'t been found.');
         // Look for the controller in the list (If controller not exists then error)
-        $this->controller = new $controller();
+        $load = $controller->name;
+        $this->controller = new $load();
         
-        if(!method_exists($controller, $action))
+        if(!method_exists($controller->name, $action))
             throw new \Exception ('The method: \''.$action.'\' cannot be found in
-                the controller: \''.$controller.'\'', 0xFF0001);
+                the controller: \''.$controller->name.'\'', 0xFF0001);
         
         // Once the controller is finded you must look for an action called
-        $this->response = $this->controller->$action();
-        
+        return $this->controller->$action();
+    }
+    
+    /**
+     * This method renders the view using the Response class defined
+     * in the Loader.
+     */
+    function render(){
         if(!is_null($this->response))
             $this->response->renderView();
     }
@@ -100,7 +117,7 @@ class Loader {
 
         // Application error management
         try{
-            $Application->setController($Application->url->getController());
+            $Application->flow($Application->url->getController());
             return true;
         } catch (\Exception $e) {
             
