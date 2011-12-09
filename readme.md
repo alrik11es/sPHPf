@@ -33,6 +33,10 @@ v 1.1.0
 
 - Added default favicon.
 
+- Added two interfaces for Loader and Response.
+
+- The Loader class is now more structured, but needs improvements.
+
 v 1.0.1
 
 - Added empty index.html in each resource folder.
