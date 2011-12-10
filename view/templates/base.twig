@@ -2,34 +2,29 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{% block title %}sPHPf Application{% endblock %}</title>
-    <link rel="shorcut icon" href="{{path}}resources/favicon.ico" />
-    <style>
-            div{
-                margin-top: 50px;
-                text-align: center;
-            }
-    </style>
-</head>
-
-<body>
-    <div id="viewport">
-        <div id="content">
-            {% block body %}{% endblock %}
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{% block title %}sPHPf Application{% endblock %}</title>
+        <link rel="shorcut icon" href="{{path}}resources/favicon.ico" />
+        <style>
+                div{
+                    margin-top: 50px;
+                    text-align: center;
+                }
+        </style>
+    </head>
+    <body>
+        <div id="viewport">
+            <div id="content">
+                {% block body %}{% endblock %}
+            </div>
+            <div id="back_2">
+                <b>Powered</b> by 
+                <img src="{{path}}resources/images/logo_icon_20.png" align="top" />
+                <a href="http://sphpf.coldstarstudios.com">sPHPf</a>
+                <br/>
+                Created by <a href="https://twitter.com/#!/alrik11es">@alrik11es</a>
+            </div>
         </div>
-        <div id="back_2">
-            <b>Powered</b> by 
-            <img src="{{path}}resources/images/logo_icon_20.png" align="top" />
-            <a href="http://sphpf.coldstarstudios.com">sPHPf</a>
-            <br/>
-            Created by <a href="https://twitter.com/#!/alrik11es">@alrik11es</a>
-        </div>
-    </div>
-        
-    {{error_control}}
-</body>
-
+    </body>
 </html>
