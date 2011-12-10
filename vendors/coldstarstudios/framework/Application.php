@@ -115,7 +115,7 @@ class Application implements interfaces\Application{
             return true;
         } catch (\Exception $e) {
             // Application error management
-            $error = new \coldstarstudios\Error($Application, $e);
+            $error = new \coldstarstudios\framework\Error($Application, $e);
             $error->response();
             return false;
         }

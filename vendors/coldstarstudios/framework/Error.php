@@ -29,8 +29,8 @@ class Error {
         $this->Application->data['error']['file'] = $this->exception->getFile();
         
         try{
-            $view = new \coldstarstudios\Response('errors/application.twig', $this->Application->data);
-            $production_view = new \coldstarstudios\Response('errors/production.twig', $this->Application->data);
+            $view = new \coldstarstudios\framework\Response('errors/application.twig', $this->Application->data);
+            $production_view = new \coldstarstudios\framework\Response('errors/production.twig', $this->Application->data);
             if($this->Application->production)
                 $production_view->renderView();
             else

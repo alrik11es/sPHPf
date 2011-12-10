@@ -33,9 +33,13 @@ v 1.1.0
 
 - Added default favicon.
 
-- Added two interfaces for Loader and Response.
+- Added two interfaces for coldstarstudios\framework\Application and Response.
 
-- The Loader class is now more structured, but needs improvements.
+- Changed the name Loader.php to Application.php
+
+- Added an example vendor.
+
+- Now you can enter directly to /install folder to check if the installation is fine.
 
 v 1.0.1
 
