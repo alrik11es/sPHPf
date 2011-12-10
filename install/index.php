@@ -70,7 +70,7 @@ echo '<div style="font-size: 20px;width: 600px; margin-left: auto; margin-right:
 $check = new Check();
 $check->for_permissions('../config/');
 $check->for_permissions('../cache/');
-$check->for_PDO();
+echo 'Optional: '; $check->for_PDO();
 $check->for_ModRewrite();
 echo '</div>';
 ?>
