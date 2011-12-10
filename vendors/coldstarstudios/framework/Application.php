@@ -10,7 +10,7 @@ use coldstarstudios\framework\Error;
  *
  * @author ALRIK
  */
-class Loader implements interfaces\Loader{
+class Application implements interfaces\Application{
     
     /** @var PDO */
     public $connection;

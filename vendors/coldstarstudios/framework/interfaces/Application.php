@@ -5,7 +5,7 @@ namespace coldstarstudios\framework\interfaces;
  * class is very important because is the main class of every application.
  * @author ALRIK
  */
-interface Loader {
+interface Application {
     function __construct();
     
     static function start($default_controller);
