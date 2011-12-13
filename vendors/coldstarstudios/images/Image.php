@@ -3,7 +3,8 @@ namespace coldstarstudios;
 /**
  * This class is used to handle image operations.
  *
- * @author alrik
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Image {
     

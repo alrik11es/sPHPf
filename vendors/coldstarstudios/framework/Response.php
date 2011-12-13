@@ -8,7 +8,8 @@ use coldstarstudios\forms\Input;
  *
  * Then whatever template engine could be added, in this case twig.
  *
- * @author ALRIK
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Response implements interfaces\Response{
     public $view;

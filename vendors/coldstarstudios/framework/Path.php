@@ -4,7 +4,8 @@ namespace coldstarstudios\framework;
 /**
  * This class is used to create the application path tag inside the template.
  *
- * @author ALRIK
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Path {
     function __construct() {

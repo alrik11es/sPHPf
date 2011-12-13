@@ -1,9 +1,11 @@
 <?php
 namespace coldstarstudios\images;
+
 /**
  * This class is used to resize multiple images.
  *
- * @author alrik
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Resize {
 

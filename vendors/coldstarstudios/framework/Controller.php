@@ -6,7 +6,8 @@ namespace coldstarstudios\framework;
  * This class generates a controller objects that will be used to
  * provide access to the selected controller.
  *
- * @author ALRIK
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Controller {
     public $name;

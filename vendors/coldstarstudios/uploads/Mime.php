@@ -4,7 +4,8 @@ namespace coldstarstudios\uploads;
 /**
  * This class will validate Mime types.
  *
- * @author alrik
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Mime {
     public $valid_ext;

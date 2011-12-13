@@ -6,7 +6,8 @@ use coldstarstudios\databases\R;
  * This class is used to create a PDO connection, in this case we use RedBean
  * library to make the connection, because uses PDO itself.
  *
- * @author alrik
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Connection {
     

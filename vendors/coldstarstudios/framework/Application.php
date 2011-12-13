@@ -8,7 +8,8 @@ use coldstarstudios\framework\Error;
 /**
  * This class is used to load the the main flow of the application.
  *
- * @author ALRIK
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Application implements interfaces\Application{
     

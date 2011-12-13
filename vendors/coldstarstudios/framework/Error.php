@@ -5,7 +5,8 @@ namespace coldstarstudios\framework;
  * The debug window will appear as a fixed menu in the bottom of the page
  * when an error is throwed.
  *
- * @author ALRIK
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Error {
     

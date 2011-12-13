@@ -5,7 +5,8 @@ namespace coldstarstudios\framework;
  * This class will be used to validate and secure the requests in the framework
  * Not added yet in the 1.0.0
  *
- * @author ALRIK
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Request {
 
