@@ -7,3 +7,9 @@ app_config:
   
   #This setting 1/0 is to set the production mode or not.
   production: 0
+  
+  #This setting is used to load the error view (production: 0)
+  error: errors/application.twig
+  
+  #This setting is used to load the error in production environment (production: 1)
+  error_production: errors/production.twig

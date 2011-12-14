@@ -30,12 +30,12 @@ class Error {
         $this->Application->data['error']['file'] = $this->exception->getFile();
         
         try{
-            $view = new \coldstarstudios\framework\Response('errors/application.twig', $this->Application->data);
-            $production_view = new \coldstarstudios\framework\Response('errors/production.twig', $this->Application->data);
+            $no_production_view = new Response($this->Application->folders['error'], $this->Application->data);
+            $production_view = new Response($this->Application->folders['error_production'], $this->Application->data);
             if($this->Application->production)
                 $production_view->renderView();
             else
-                $view->renderView();
+                $no_production_view->renderView();
             
         } catch (\Exception $z) {
             echo "Error message: #".$z->getCode()." ---- ".$z->getMessage()." ".$z->getFile();
