@@ -28,7 +28,10 @@ class Application implements interfaces\Application{
     /** @var Aplication path */
     public $path;
     
+    // Application folders
     public $folders = array();
+    
+    // Application main data transmission through controller-view
     public $data = array();
 
     /**
