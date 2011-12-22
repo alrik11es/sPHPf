@@ -1,5 +1,5 @@
 <?php
-namespace coldstarstudios;
+namespace coldstarstudios\uploads;
 
 /**
  * This class is used to handle image operations.
@@ -8,7 +8,6 @@ namespace coldstarstudios;
  * @license MIT
  */
 class Upload {
-    
     /**
      * This static method validates a image extension returning true or false.
      * 
@@ -25,13 +24,16 @@ class Upload {
      * This method allows you to know the mime type of whatever file from its
      * extension.
      * Returns the name of the mime type or false if not found.
-     * @param type $filename
+     * @param type $file
      * @return string 
      */
-    static function getMimeType($filename){
+    static function getMimeType($file){
         $file = preg_split("/\./", $file);
         $types = array('jpg'=>'image/jpeg', 'png'=>'image/png', 'gif'=>'image/gif');
-        if(isset(strtolower($file[count($file)-1])))
+        
+        $count = count($file)-1;
+        
+        if(isset($file[$count]))
             return $types[strtolower($file[count($file)-1])];
         else
             return false;

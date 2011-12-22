@@ -1,0 +1,6 @@
+{
+  "name": "My new package",
+  "description": "This is a small package description",
+  "version": "1.0.0.0",
+  "icon": "app.png"
+}

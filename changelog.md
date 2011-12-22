@@ -2,6 +2,8 @@
 
 v 1.1.1
 
+- Added a manifest.json example in the ExampleVendor folder.
+- Some namespaces were wrong.
 
 v 1.1.0
 

@@ -40,10 +40,8 @@ class Application implements interfaces\Application{
     function __construct() {
                 
         // Database connection
-        if(class_exists('Connection')){
-            $conn = new Connection();
-            $this->connection = $conn->create();
-        }
+        $conn = new Connection();
+        $this->connection = $conn->create();
         
         // Data Request class
         $this->request = new Request();

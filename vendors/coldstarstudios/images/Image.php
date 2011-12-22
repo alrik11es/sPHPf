@@ -1,5 +1,5 @@
 <?php
-namespace coldstarstudios;
+namespace coldstarstudios\images;
 /**
  * This class is used to handle image operations.
  *
