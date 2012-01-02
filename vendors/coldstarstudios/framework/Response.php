@@ -45,4 +45,3 @@ class Response implements interfaces\Response{
     }
 
 }
-?>

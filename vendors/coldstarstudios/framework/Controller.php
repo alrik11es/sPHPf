@@ -40,4 +40,3 @@ class Controller {
         return $this->name.' -> '.$this->action;
     }
 }
-?>

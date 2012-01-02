@@ -17,4 +17,3 @@ interface Application {
         function exec($controller);
         function render();
 }
-?>

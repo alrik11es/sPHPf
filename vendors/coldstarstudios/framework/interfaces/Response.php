@@ -12,4 +12,3 @@ interface Response {
    public function __construct($view, $vars = array());
    public function renderView();
 }
-?>

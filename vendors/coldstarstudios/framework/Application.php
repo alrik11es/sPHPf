@@ -126,4 +126,3 @@ class Application implements interfaces\Application{
         }
     }
 }
-?>

@@ -76,5 +76,3 @@ class Request {
         return $this->default_controller;
     }
 }
-
-?>

@@ -14,4 +14,3 @@ class mainController extends \Application {
         return new \coldstarstudios\framework\Response('web/other.twig', $this->data);
     }
 }
-?>
