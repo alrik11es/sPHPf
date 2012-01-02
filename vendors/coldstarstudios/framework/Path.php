@@ -24,7 +24,10 @@ class Path {
                 $path .= 'http://';
             
             $path .= $_SERVER['HTTP_HOST'];
-            $path .= str_replace($page, '', $_SERVER['REQUEST_URI']);
+            $clean = preg_split("/\?/", $_SERVER['REQUEST_URI']);
+            $path .= str_replace($page, '', $clean[0]);
+           
+            $path = str_replace($_SERVER['QUERY_STRING'], '', $path);
             
             return $path;
         } else
