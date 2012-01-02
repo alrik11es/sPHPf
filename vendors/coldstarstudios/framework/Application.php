@@ -55,7 +55,7 @@ class Application implements interfaces\Application{
         $app_config = $data['app_config'];
         
         $this->production = $app_config['production'];
-        $this->path = $app_config['default_uri'];
+        $this->path = new Path();
         $this->folders['error'] = $app_config['error'];
         $this->folders['error_production'] = $app_config['error_production'];
     }

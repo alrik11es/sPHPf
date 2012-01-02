@@ -16,22 +16,18 @@ class Path {
         if(isset($_GET['page']))
         {
             $page = $_GET['page'];
-            $path = '/';
-            $directories = preg_split('/\//', $page);
-            echo count($directories);
-            for($i=0; $i<count($directories); $i++)
-            {
-                $test_path = $path .'../';
-                if(is_dir($test_path))
-                    $path .= '../';
-            }
+            $path = '';
+            
+            if(isset($_SERVER["HTTPS"]))
+                $path .= 'https://';
+            else
+                $path .= 'http://';
+            
+            $path .= $_SERVER['HTTP_HOST'];
+            $path .= str_replace($page, '', $_SERVER['REQUEST_URI']);
             
             return $path;
-
-        } else {
+        } else
             return '';
-        }
     }
 }
-
-?>

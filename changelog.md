@@ -4,6 +4,8 @@ v 1.1.1
 
 - Added a manifest.json example in the ExampleVendor folder.
 - Some namespaces were wrong.
+- Deleted path var in app_config.yaml now is automatic.
+- Added main_class var in ExampleVendor manifest.json
 
 v 1.1.0
 
