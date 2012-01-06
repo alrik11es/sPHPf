@@ -6,6 +6,7 @@ v 1.1.1
 - Some namespaces were wrong.
 - Deleted path var in app_config.yaml now is automatic.
 - Added main_class var in ExampleVendor manifest.json
+- Resolved BIG security problem that causes someone could access to config directory and read the config files.
 
 v 1.1.0
 
