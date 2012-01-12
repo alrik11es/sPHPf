@@ -39,5 +39,3 @@ class Upload {
             return false;
     }
 }
-
-?>

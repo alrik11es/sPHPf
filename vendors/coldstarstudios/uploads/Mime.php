@@ -34,4 +34,3 @@ class Mime {
         return in_array($file[count($file)-1], $this->valid_ext);
     }
 }
-?>

@@ -2,7 +2,9 @@
 
 v 1.1.2
 
-- Minor update because a rare char appears in the index.php file (﻿).
+- Minor that affects header() kind functions because a rare char appears in the index.php file (﻿).
+- Deleted the ?> in some other files.
+- Deleted messy code in Application.php
 
 v 1.1.1
 
