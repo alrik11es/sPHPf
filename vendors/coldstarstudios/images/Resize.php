@@ -44,5 +44,3 @@ class Resize {
         return $dst_image;
     }
 }
-
-?>
