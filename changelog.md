@@ -1,5 +1,9 @@
 ##Changelog
 
+v 1.1.2
+
+- Added widget/ folder and Widget class.
+
 v 1.1.1
 
 - Added a manifest.json example in the ExampleVendor folder.

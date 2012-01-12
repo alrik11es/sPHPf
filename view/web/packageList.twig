@@ -1,0 +1,27 @@
+{% extends 'templates/base.twig' %}
+
+{% block body %}
+    
+<h3>Available package list</h3>
+
+    <a href="{{path}}main/index">Main page</a><br/>
+    <a href="{{path}}main/other">Other page</a><br/><br/>
+
+<center>
+    <table style="background-color: lightgray; border-radius: 5px; padding: 10px; margin: 5px;">
+        {% for package in packages %}
+        <tr>
+            <td>
+                <img src="{{package.icon}}" width="30" align="left">
+            </td>
+            <td>
+                <b>{{package.name}}</b><br/>{{package.description}}<br/>
+                <a href="http://sphpf.coldstarstudios.com/forge/main/package?id={{package.num}}">See in The Forge</a>
+                |
+                <a href="http://sphpf.coldstarstudios.com/forge/main/download?id={{package.num}}">Download</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</center>
+{% endblock %}
