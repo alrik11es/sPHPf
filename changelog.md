@@ -1,5 +1,9 @@
 ##Changelog
 
+v 1.1.2
+
+- Minor update because a rare char appears in the index.php file (﻿).
+
 v 1.1.1
 
 - Added a manifest.json example in the ExampleVendor folder.
