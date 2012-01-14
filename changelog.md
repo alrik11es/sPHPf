@@ -3,6 +3,7 @@
 v 1.1.3
 
 - Added widget/ folder and Widget class.
+- Added support for PHP in views. Depends on file extension.
 
 v 1.1.2
 
