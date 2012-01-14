@@ -13,4 +13,9 @@ class mainController extends \Application {
     function other() {
         return new \coldstarstudios\framework\Response('web/other.twig', $this->data);
     }
+    
+    function phpView() {
+        // This is how you set up vars to use inside your view.
+        return new \coldstarstudios\framework\Response('web/phpView.php', $this->data);
+    }
 }

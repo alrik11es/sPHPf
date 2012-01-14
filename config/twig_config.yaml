@@ -1,3 +1,4 @@
+#If Twig is present this is the config file.
 ---
 twig_config:
   # Remember that this folder needs write permissions
