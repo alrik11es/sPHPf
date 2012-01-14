@@ -9,7 +9,6 @@ namespace coldstarstudios\framework;
  * @license MIT
  */
 class Widget {
-
     
 }
 

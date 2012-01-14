@@ -13,7 +13,7 @@ use coldstarstudios\framework\Error;
  */
 class Application implements interfaces\Application{
     
-    /** @var PDO */
+    /** @var Connection */
     public $connection;
     /** @var Request */
     public $request;
