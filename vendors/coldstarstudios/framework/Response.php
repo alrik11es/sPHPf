@@ -1,6 +1,6 @@
 <?php
 namespace coldstarstudios\framework;
-use coldstarstudios\forms\Input;
+use coldstarstudios\framework\Widget;
 
 /**
  * This class generates a response in a simple way. Loads the view and
@@ -18,10 +18,14 @@ class Response implements interfaces\Response{
     public $file_ext;
     private $twig;
     
+    /** @var Widget */
+    private $widget;
     
     function __construct($view, $vars = array()) {
         $this->view = $view;
         $this->vars = $vars;
+        
+        $this->widget = new Widget();
         
         $splitted = preg_split("/\./", $view);
         $this->file_ext = $splitted[count($splitted)-1];
@@ -47,7 +51,8 @@ class Response implements interfaces\Response{
         $twig_config_file = 'config/twig_config.yaml';
         $data = \Spyc\Spyc::YAMLLoad($twig_config_file);
 
-        $loader = new \Twig_Loader_Filesystem($data['twig_config']['templates']);
+        $filesystem = array_merge(array($data['twig_config']['templates']), $this->widget->widget_view_folders);
+        $loader = new \Twig_Loader_Filesystem($filesystem);
 
         if(!file_exists($data['twig_config']['cache']) || !is_writable($data['twig_config']['cache']))
             throw new \Exception("The <b>{$data['twig_config']['cache']}</b> folder must exist and be writable.",
@@ -68,7 +73,11 @@ class Response implements interfaces\Response{
     
     function phpRender(){
         $this->vars['path'] = new Path();
-        $vars = extract($this->vars);
-        include('view/'.$this->view);
+        extract($this->vars);
+        $filesystem = array_merge(array('view'), $this->widget->widget_view_folders);
+        foreach($filesystem as $folder){
+            if(file_exists($folder.'/'.$this->view))
+                include($folder.'/'.$this->view);
+        }
     }
 }
