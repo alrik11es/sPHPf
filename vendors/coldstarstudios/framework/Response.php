@@ -35,7 +35,7 @@ class Response implements interfaces\Response{
         // This will show all the view using the model and the controller
         if($this->twigReady() && $this->file_ext == 'twig')
             $this->twigRender();
-        elseif($this->file_ext == 'php')
+        else
             $this->phpRender();
     }
     

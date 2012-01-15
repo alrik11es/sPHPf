@@ -2,8 +2,9 @@
 
 v 1.1.3
 
-- Added widget/ folder and Widget class.
 - Added support for PHP in views. Depends on file extension.
+- Support now multiple database engines for the moment PDO and RedBeans (This is still subject to change).
+- Widget approach support.
 
 v 1.1.2
 

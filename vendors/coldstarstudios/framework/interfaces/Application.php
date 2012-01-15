@@ -10,10 +10,7 @@ namespace coldstarstudios\framework\interfaces;
  */
 interface Application {
     function __construct();
-    
     static function start($default_controller);
-    
     function flow($controller);
-        function exec($controller);
-        function render();
+    function render();
 }

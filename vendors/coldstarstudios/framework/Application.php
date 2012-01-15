@@ -65,7 +65,7 @@ class Application implements interfaces\Application{
      * @param Controller $linked_controller 
      */
     function flow($controller){
-        $this->response = $this->exec($controller);
+        $this->response = $this->controllerExec($controller);
         
         if(!is_null($this->response))
             $this->render();
@@ -75,9 +75,9 @@ class Application implements interfaces\Application{
      * Executes the controller.
      * @param Controller $linked_controller
      */
-    function exec($controller) {
+    function controllerExec($controller) {
         $action = $controller->action;
-                
+
         if(!class_exists($controller->name))
             throw new \Exception ('The controller: '.$controller->name.' hasn\'t been found.');
         // Look for the controller in the list (If controller not exists then error)
