@@ -44,9 +44,17 @@ class Request {
             $action = null;
             $controller = null;
             
-            $num = 0;
-            for($i=0; $i<count($directories); $i++)
-            {
+            $method_num = count($directories)-1;
+            $controller_num = count($directories)-2;
+            
+            $controller = $directories[$controller_num].'Controller';
+            $action = $directories[$method_num];
+            
+            //$num = 0;
+            //for($i=0; $i<count($directories); $i++)
+            //{
+                
+                /** // OLD VERSION
                 $test_path = $controller_path . $directories[$i].'/';
                 if(is_dir($test_path))
                     $controller_path .= $directories[$i].'/';
@@ -58,13 +66,14 @@ class Request {
                             $num = $i+2;
                         }
                     }
-                }
-            }
+                }//*/
+            //}
 
+            /*
             if($num != 0)
                 $data = array_slice($directories, $num);
-            else
-                $data = array();
+            else*/
+            $data = array();
             
             // Hay veces que pone dos y no es cierto, lo arreglo con esto.
             //$controller_path = str_replace('\\\\', '\\', $controller_path);
