@@ -2,7 +2,7 @@
 class Autoloader{
     
     static public function register() {
-        ini_set('unserialize_callback_func', 'spl_autoload_call');
+        //ini_set('unserialize_callback_func', 'autoload');
         spl_autoload_register(array(new self, 'autoload'));
     }
     
