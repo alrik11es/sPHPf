@@ -9,7 +9,21 @@ namespace coldstarstudios\framework;
  * @license MIT
  */
 class Widget {
-
     
+    public $widget_view_folders = array();
+    
+    function __construct(){
+        $this->getWidgets();
+    }
+    
+    function getWidgets(){
+        // Load from widget folder
+        $widget_folder = scandir('widget/');
+        array_shift($widget_folder);array_shift($widget_folder);
+        foreach($widget_folder as $widget){
+            if(is_dir('widget/'.$widget)){
+                array_push($this->widget_view_folders, 'widget/'.$widget.'/view');
+            }
+        }
+    }
 }
-

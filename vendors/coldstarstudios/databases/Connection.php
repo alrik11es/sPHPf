@@ -11,13 +11,17 @@ use coldstarstudios\databases\R;
  */
 class Connection {
     
-    public $conn = array();
+    public $config = array();
+    
+    /** @var \PDO */
+    public $resource = null;
+    
     /** @var \PDOException */
     public $exception;
     
     function create() {
         // If $conn is empty then load from config file.
-        if(count($this->conn) <= 0)
+        if(count($this->config) <= 0)
         {
             $dbase_config_file = 'config/db_config.yaml';
             if(!file_exists($dbase_config_file))
@@ -25,29 +29,32 @@ class Connection {
             // Read config file
             $data = \Spyc\Spyc::YAMLLoad($dbase_config_file);
             if(isset($data['db_config']))
-                $this->conn = $data['db_config'];
+                $this->config = $data['db_config'];
         }
         
         try{
             // Then create connection
-            if(isset($this->conn['provider']))
-            switch($this->conn['provider']){
+            if(isset($this->config['provider']))
+            switch($this->config['provider']){
                 case 'mysql': 
-                        $dsn = 'mysql:host='.$this->conn['hostname'].';dbname='.$this->conn['database'];
+                        $dsn = 'mysql:host='.$this->config['hostname'].';dbname='.$this->config['database'];
                     break;
                 
                 case 'sqlite':
-                        $dsn = 'sqlite:'.$this->conn['database'];
+                        $dsn = 'sqlite:'.$this->config['database'];
                     break;
             }
         
-            // We create RedBean database connection.
-            // (This could be easily changed by adding your own library)
-            if(isset($this->conn['username']) && isset($this->conn['password']))
-            {
-                R::setup($dsn, $this->conn['username'], $this->conn['password']);
+            // We create RedBean database connection if redbean is installed else we use PDO
             
-                if($this->conn['database'] == null)
+            if(isset($this->config['username']) && isset($this->config['password']))
+            {
+                if(class_exists('\RedBean_Facade') && $this->config['engine'] == 'redbean')
+                    R::setup($dsn, $this->config['username'], $this->config['password']);
+                else if($this->config['engine'] == 'PDO')
+                    $this->resource = new \PDO($dsn, $this->config['username'], $this->config['password']);
+            
+                if($this->config['database'] == null)
                     throw new \PDOException ('SQLSTATE[??????] [????] You have to specify a database');
             }
             

@@ -44,31 +44,23 @@ class Request {
             $action = null;
             $controller = null;
             
-            $num = 0;
-            for($i=0; $i<count($directories); $i++)
-            {
-                $test_path = $controller_path . $directories[$i].'/';
-                if(is_dir($test_path))
-                    $controller_path .= $directories[$i].'/';
-                else {
-                    if(is_file($controller_path.$directories[$i].'Controller.php')) {
-                        $controller = $directories[$i].'Controller';
-                        if(isset($directories[$i+1])) {
-                            $action = $directories[$i+1];
-                            $num = $i+2;
-                        }
-                    }
-                }
-            }
-
-            if($num != 0)
-                $data = array_slice($directories, $num);
-            else
-                $data = array();
+            $method_num = count($directories)-1;
+            $controller_num = count($directories)-2;
             
-            // Hay veces que pone dos y no es cierto, lo arreglo con esto.
-            //$controller_path = str_replace('\\\\', '\\', $controller_path);
-            //echo "return new Controller($controller_path.$controller, $action, $data);";
+            $controller_tmp = $directories[$controller_num].'Controller';
+            $action = $directories[$method_num];
+            
+            array_pop($directories);
+            array_pop($directories);
+            $controller = '';
+            foreach($directories as $folder){
+                $controller .= $folder.'/';
+            }
+            
+            $controller .= $controller_tmp;
+          
+            $data = array();
+            
             $controller = $controller_path.$controller;
             $controller = str_replace('/', '\\', $controller);
             return new Controller($controller, $action, $data);

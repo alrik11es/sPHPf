@@ -13,7 +13,7 @@ use coldstarstudios\framework\Error;
  */
 class Application implements interfaces\Application{
     
-    /** @var PDO */
+    /** @var Connection */
     public $connection;
     /** @var Request */
     public $request;
@@ -25,7 +25,7 @@ class Application implements interfaces\Application{
     /// This var allows you to choose if you want to see the response or not.
     public $production = false;
     
-    /** @var Aplication path */
+    /** @var Path */
     public $path;
     
     // Application folders
@@ -65,19 +65,19 @@ class Application implements interfaces\Application{
      * @param Controller $linked_controller 
      */
     function flow($controller){
-        $this->response = $this->exec($controller);
-        
+        $this->response = $this->controllerExec($controller);
+
         if(!is_null($this->response))
             $this->render();
     }
     
     /**
      * Executes the controller.
-     * @param Controller $linked_controller
+     * @param Controller $controller
      */
-    function exec($controller) {
+    function controllerExec($controller) {
         $action = $controller->action;
-                
+       
         if(!class_exists($controller->name))
             throw new \Exception ('The controller: '.$controller->name.' hasn\'t been found.');
         // Look for the controller in the list (If controller not exists then error)
