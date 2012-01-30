@@ -1,3 +1,3 @@
 <?php
-echo 'ESTO ES UNA VISTA CON PHP';
+echo 'THIS IS A WIDGET VIEW MADE WITH PHP';
 ?>
