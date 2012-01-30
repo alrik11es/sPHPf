@@ -21,6 +21,11 @@ class Autoloader{
                     array('/', '/', ''), $class).'.php'))
                 require_once $file;
             
+            // Load from app vendors folder
+            if(is_file($file = self::$dirname.'/vendors/'.str_replace(array('\\','_',"\0"),
+                    array('/', '/', ''), $class).'.php'))
+                require_once $file;
+            
             // Load from widget folder
             $widget_folder = scandir('widget/');
             foreach($widget_folder as $widget){
