@@ -7,8 +7,8 @@ class Autoloader{
     }
     
     static public function autoload($class) {
-        /*// Debug purposes
-        echo dirname(__FILE__).'/widget/'.str_replace(array('\\','_',"\0"),
+        // Debug purposes
+        echo dirname(__FILE__).'/'.str_replace(array('\\','_',"\0"),
             array('/', '/', ''), $class).'.php<br>';//*/
         
         // If class not exists
