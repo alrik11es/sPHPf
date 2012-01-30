@@ -1,5 +1,9 @@
 ##Changelog
 
+v 1.2.0
+
+- Added separated folder structure. A major change in the workload.
+
 v 1.1.3
 
 - Added support for PHP in views. Depends on file extension.

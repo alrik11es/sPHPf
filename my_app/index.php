@@ -2,6 +2,7 @@
 session_start();
 use coldstarstudios\framework\Controller;
 
+// Here you have to point to the Autoloader.php the base of any sPHPf based APP
 require '../sPHPf/Autoloader.php';
 Autoloader::register(dirname(__FILE__));
 
