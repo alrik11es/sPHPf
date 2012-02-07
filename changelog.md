@@ -4,6 +4,7 @@ v 1.2.0
 
 - Added separated folder structure. A major change in the workload.
 - The app can be now an app of an app.
+- Added new type DataTable.
 
 v 1.1.3
 
