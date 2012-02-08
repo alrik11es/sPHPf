@@ -1,4 +1,5 @@
-#sPHPf (Simple PHP Framework)
+sPHPf (Simple PHP Framework)
+============================
 ### Making your life simple and better.
 
 sPHPf is a PHP 5.3 based framework that allows you to initiate a fast developement
@@ -10,6 +11,9 @@ switch between other template engines or database engines in an easy way.
 
 You can obviously see more information of this framework in the webpage.
 http://sphpf.coldstarstudios.com
+
+How to use
+----------
 
 ### Example Controller
 
@@ -46,6 +50,9 @@ class mainController extends \Application {
     <a href="{{path}}main/other">Other page</a>
 {% endblock %}
 ```
+
+Developement
+------------
 
 ###Changelog
 
