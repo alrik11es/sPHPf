@@ -11,11 +11,47 @@ switch between other template engines or database engines in an easy way.
 You can obviously see more information of this framework in the webpage.
 http://sphpf.coldstarstudios.com
 
-##Changelog
+### Example Controller
+
+```php
+<?php
+// Remember to add the namespace when you create a new controller
+namespace controller;
+
+class mainController extends \Application {
+
+    function index() {
+        // This is how you set up vars to use inside your view.
+        $this->data['example_var'] = \ExampleVendor\ExampleVendor::EXAMPLE_CONST;
+        return new \coldstarstudios\framework\Response('web/index.twig', $this->data);
+    }
+}
+```
+
+### Example view
+
+```twig
+{% extends 'templates/base.twig' %}
+
+{% block body %}
+    <b>This is a Simple PHP Framework Application</b><br/>
+    {{example_var}}
+    <br/><br/>
+    Mini-menu:
+    <br/><br/>
+    <a href="{{path}}main/index">Main page</a><br/>
+    <a href="{{path}}main/phpView">PHP View page</a><br/>
+    <a href="{{path}}test/twig">Page from widget with TWIG</a><br/>
+    <a href="{{path}}test/php">Page from widget with PHP</a><br/>
+    <a href="{{path}}main/other">Other page</a>
+{% endblock %}
+```
+
+###Changelog
 
 Please refer to changelog.md
 
-##License
+###License
 
 Please refer to license.txt
 
