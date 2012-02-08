@@ -5,6 +5,7 @@ v 1.2.0
 - Added separated folder structure. A major change in the workload.
 - The app can be now an app of an app.
 - Added new type DataTable.
+- Minor changes in database connection to allow select the dabase engine.
 
 v 1.1.3
 
