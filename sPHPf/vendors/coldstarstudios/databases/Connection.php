@@ -53,7 +53,9 @@ class Connection {
                     R::setup($dsn, $this->config['username'], $this->config['password']);
                 else if($this->config['engine'] == 'PDO')
                     $this->resource = new \PDO($dsn, $this->config['username'], $this->config['password']);
-            
+                else
+                    throw new \Exception ('[ERROR] You didn\'t defined the engine in config or its wrong.');
+                
                 if($this->config['database'] == null)
                     throw new \PDOException ('SQLSTATE[??????] [????] You have to specify a database');
             }
