@@ -4,7 +4,7 @@ db_config:
 # To setup a sqlite connection:
 #  provider: sqlite
 #  username: root
-#  password: prueba
+#  password: test
 #  database: file.txt
 ---
 # To setup a mysql connection:
