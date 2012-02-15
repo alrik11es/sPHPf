@@ -14,7 +14,8 @@ http://sphpf.coldstarstudios.com
 
 How to start building your own app?
 -----------------------------------
-To start an app simply copy "my_app" folder inside sPHPf wherever you want. Then point the require to Loader in index.php
+To start an app simply copy "my_app" folder wherever you want to starting to build your
+brand new application. Then point the require to Loader in index.php
 
 ```php
 <?php
