@@ -1,5 +1,11 @@
 ##Changelog
 
+v 1.2.1
+
+- Added a correction in Request.php to avoid showing errors with a path like /something.
+- Added the posibility to return a text instead of a view object.
+- Corrected a little problem with directories.
+
 v 1.2.0
 
 - Added separated folder structure. A major change in the workload.

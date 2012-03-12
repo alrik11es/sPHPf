@@ -97,7 +97,10 @@ class Application implements interfaces\Application{
      * in the Loader.
      */
     function render(){
-        $this->response->renderView();
+        if(is_object($this->response))
+            $this->response->renderView();
+        else
+            echo $this->response;
     }
     
     /**

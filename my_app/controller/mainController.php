@@ -18,4 +18,8 @@ class mainController extends \Application {
         // This is how you set up vars to use inside your view.
         return new \coldstarstudios\framework\Response('web/phpView.php', $this->data);
     }
+    
+    function text() {
+        return "I can also return a text here!!!! (Useful for AJAX)";
+    }
 }

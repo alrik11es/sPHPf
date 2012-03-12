@@ -47,8 +47,8 @@ class Request {
             $method_num = count($directories)-1;
             $controller_num = count($directories)-2;
             
-            $controller_tmp = $directories[$controller_num].'Controller';
-            $action = $directories[$method_num];
+            $controller_tmp = @$directories[$controller_num].'Controller';
+            $action = @$directories[$method_num];
             
             array_pop($directories);
             array_pop($directories);
