@@ -85,8 +85,7 @@ class Application implements interfaces\Application{
         $this->controller = new $load();
         
         if(!method_exists($controller->name, $action))
-            throw new \Exception ('The method: \''.$action.'\' cannot be found in
-                the controller: \''.$controller->name.'\'', 0xFF0001);
+            throw new \Exception ('The method: \''.$action.'\' cannot be found in the controller: \''.$controller->name.'\'', 0xFF0001);
         
         // Once the controller is finded you must look for an action called
         return $this->controller->$action();

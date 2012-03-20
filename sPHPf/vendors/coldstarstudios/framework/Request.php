@@ -40,30 +40,39 @@ class Request {
             $page = $_GET['page'];
             $directories = preg_split('/\//', $page);
             
-            $controller_path = 'controller/';
+            // Filtering $directories something/---(Empty)
+            $directories = array_filter($directories, function($var){
+                if(empty($var))
+                    return false;
+                else
+                    return true;
+            });
+            
+            $controller_path = 'controller'; // Without slash
             $action = null;
             $controller = null;
             
-            $method_num = count($directories)-1;
-            $controller_num = count($directories)-2;
+            //Debug
+            //print_r($directories);
             
-            $controller_tmp = @$directories[$controller_num].'Controller';
-            $action = @$directories[$method_num];
-            
-            array_pop($directories);
-            array_pop($directories);
-            $controller = '';
-            foreach($directories as $folder){
-                $controller .= $folder.'/';
+            $controller_tmp = $controller_path;
+            for($i=0; $i<count($directories); $i++){
+                $controller_tmp .= '\\'.$directories[$i];
+
+                // If the last is a class over it only folders
+                if($i == count($directories)-1 && class_exists($controller_tmp.'Controller')){
+                    $controller = $controller_tmp.'Controller';
+                    $action = 'index';
+                }
+                
+                // If the last is a method and the beforelast is a class over it everything is folder
+                if($i == count($directories)-2 && class_exists($controller_tmp.'Controller')){
+                    $controller = $controller_tmp.'Controller';
+                    $action = $directories[count($directories)-1];
+                }
             }
             
-            $controller .= $controller_tmp;
-          
-            $data = array();
-            
-            $controller = $controller_path.$controller;
-            $controller = str_replace('/', '\\', $controller);
-            return new Controller($controller, $action, $data);
+            return new Controller($controller, $action, $data = array());
         }
         return $this->default_controller;
     }
