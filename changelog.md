@@ -5,6 +5,7 @@ v 1.2.1
 - Added a correction in Request.php to avoid showing errors with a path like /something.
 - Added the posibility to return a text instead of a view object.
 - Corrected a little problem with directories.
+- Added the posibility to use index methods. Works as common html, in case of collision folders are first.
 
 v 1.2.0
 
