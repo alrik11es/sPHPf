@@ -14,6 +14,9 @@ class DataTable {
     private $table_fields = array();
     private $table_content = array();
     
+    /**
+     * Extracts a portion of the DataTable returning an array.
+     */
     function getRows($start, $end){
         
     }
@@ -28,10 +31,16 @@ class DataTable {
         
     }
     
+    /**
+     * Delete a row from the DataTable
+     */
     function deleteRow(){
         
     }
     
+    /**
+     * Empties the Data from the DataTable holding the Columns.
+     */
     function emptyData(){
         
     }
