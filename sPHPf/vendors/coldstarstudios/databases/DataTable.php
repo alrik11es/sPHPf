@@ -14,20 +14,33 @@ class DataTable {
     private $table_fields = array();
     private $table_content = array();
     
+    /**
+     * Extracts a portion of the DataTable returning an array.
+     */
     function getRows($start, $end){
         
     }
     
+    /**
+     * Fills a DataTable with data from an array.
+     * Must be only a table $array['column'] = 'data';
+     */
     function fill($data = array()){
         if(count($data) == 0)
             return false;
         
     }
     
+    /**
+     * Delete a row from the DataTable
+     */
     function deleteRow(){
         
     }
     
+    /**
+     * Empties the Data from the DataTable holding the Columns.
+     */
     function emptyData(){
         
     }
