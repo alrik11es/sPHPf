@@ -18,6 +18,10 @@ class DataTable {
         
     }
     
+    /**
+     * Fills a DataTable with data from an array.
+     * Must be only a table $array['column'] = 'data';
+     */
     function fill($data = array()){
         if(count($data) == 0)
             return false;
