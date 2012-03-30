@@ -5,6 +5,7 @@ v 1.2.1
 - Added the posibility to return a text instead of a view object.
 - Major rework of Request.php file to simplify the code.
 - Added the posibility to use index methods. Works as common html, in case of collision folders are first.
+- Corrected a mistake in db_config.yaml no need to ; at the end of a line.
 
 v 1.2.0
 

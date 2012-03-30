@@ -1,5 +1,5 @@
 db_config:
-  engine: PDO;
+  engine: PDO
 
 # To setup a sqlite connection:
 #  provider: sqlite
