@@ -4,7 +4,8 @@ namespace coldstarstudios\validation;
 /**
  * This class will check if a RFC 2822 compliant email address is provided or not.
  * 
- * @author ALRIK
+ * @author Marcos Sigueros Fernández
+ * @license MIT
  */
 class Email{
     

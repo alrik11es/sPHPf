@@ -38,7 +38,6 @@ class Application implements interfaces\Application{
      * This constructor loads the main flow of the application.
      */
     function __construct() {
-                
         // Database connection
         $conn = new Connection();
         $this->connection = $conn->create();
