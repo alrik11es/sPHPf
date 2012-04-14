@@ -9,37 +9,53 @@ namespace coldstarstudios\images;
  */
 class Resize {
 
-    public $image, $width, $height;
+    public $image;
     
-    function __construct($image, $width, $height){
+    function __construct($image){
         $this->image = $image;
-        $this->width = $width;
-        $this->height = $height;
     }
     
-    function resize(){
+    function resize($maxSize){
         
-        $width_orig = imagesx($this->image);
-        $height_orig = imagesy($this->image);
+        $info = array('height'=>0,'width'=>0);
+        $info['width'] = imagesx($this->image);
+        $info['height'] = imagesy($this->image);
         
-        $width = $this->width; 
-        $height = $this->height;
-        
-        if ($width_orig > $height_orig){ 
-            $height = ($height_orig/$width_orig)*$height; 
-        } else if($height_orig > $width_orig){ 
-            $width = ($width_orig/$height_orig)*$width; 
+        $width  = isset($info['width'])  ? $info['width']  : $info[0];
+        $height = isset($info['height']) ? $info['height'] : $info[1];
+ 
+        // Calculate aspect ratio
+        $wRatio = $maxSize / $width;
+        $hRatio = $maxSize / $height;
+ 
+        // Calculate a proportional width and height no larger than the max size.
+        if (($width <= $maxSize) && ($height <= $maxSize))
+        {
+            // Input is smaller than thumbnail, do nothing
+            return $this->image;
         }
-        
-        $dst_image = imagecreatetruecolor($width, $height_orig);
+        elseif (($wRatio * $height) < $maxSize)
+        {
+            // Image is horizontal
+            $tHeight = ceil($wRatio * $height);
+            $tWidth  = $maxSize;
+        }
+        else
+        {
+            // Image is vertical
+            $tWidth  = ceil($hRatio * $width);
+            $tHeight = $maxSize;
+        }
+ 
+        $dst_image = imagecreatetruecolor($tWidth, $tHeight);
 
         imagealphablending($dst_image, false);
         imagesavealpha($dst_image,true);
         $transparent = imagecolorallocatealpha($dst_image, 255, 255, 255, 127);
-        imagefilledrectangle($dst_image, 0, 0, $width, $height_orig, $transparent);
+        imagefilledrectangle($dst_image, 0, 0, $tWidth, $tHeight, $transparent);
         
         imagecopyresampled($dst_image, $this->image, 0, 0, 0, 0,
-                $width, $height_orig, imagesx($this->image), imagesy($this->image));
+                $tWidth, $tHeight, $width, $height);
         
         return $dst_image;
     }

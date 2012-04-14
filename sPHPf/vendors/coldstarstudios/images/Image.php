@@ -17,9 +17,9 @@ class Image {
      * @param type $height
      * @return image 
      */
-    static function resize($image, $width, $height){
-        $resize = new \coldstarstudios\images\Resize($image, $width, $height);
-        return $resize->Resize();
+    static function resize($image, $size){
+        $resize = new \coldstarstudios\images\Resize($image);
+        return $resize->Resize($size);
     }
     
     /**
