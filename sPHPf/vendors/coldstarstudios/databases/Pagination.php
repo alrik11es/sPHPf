@@ -6,8 +6,8 @@ class Pagination{
     public $reg_num, $var_name, $page, $start_num;
     public $total; // Nedded for the advanced footer.
     public $debug = false;
-    public $next_term = 'Anteriores';
-    public $before_term = 'Siguientes';
+    public $next_term = 'Siguientes';
+    public $before_term = 'Anteriores';
     
     /**
      * This class allows you to paginate any query.
