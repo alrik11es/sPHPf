@@ -2,12 +2,17 @@
 
 v 1.2.2
 
+- Added stack based validation system.
+- Changes in image management.
+- Added a good pagination class.
+- Improved the resize algorithm in image manipulation class.
+- Added support to non MOD REWRITE servers. (Unstable)
 
 v 1.2.1
 
 - Added the posibility to return a text instead of a view object.
 - Major rework of Request.php file to simplify the code.
-- Added the posibility to use index methods. Works as common html, in case of collision folders are first.
+- Added the posibility to use index methods. Works as common html, in case of collision folders first.
 - Corrected a mistake in db_config.yaml no need to ; at the end of a line.
 - Added new Twig version.
 

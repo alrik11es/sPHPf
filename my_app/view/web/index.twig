@@ -4,11 +4,20 @@
     <b>This is a Simple PHP Framework Application</b><br/>
     {{example_var}}
     <br/><br/>
-    Mini-menu:
-    <br/><br/>
+    
+    <h3>MOD REWRITE enabled</h3>
+    
     <a href="{{path}}main/index">Main page</a><br/>
     <a href="{{path}}main/phpView">PHP View page</a><br/>
     <a href="{{path}}test/twig">Page from widget with TWIG</a><br/>
     <a href="{{path}}test/php">Page from widget with PHP</a><br/>
-    <a href="{{path}}main/other">Other page</a>
+    <a href="{{path}}main/other">Other page</a><br/>
+    
+    <h3>MOD REWRITE disabled</h3>
+    
+    <a href="{{path}}?page=main/index">Main page</a><br/>
+    <a href="{{path}}?page=main/phpView">PHP View page</a><br/>
+    <a href="{{path}}?page=test/twig">Page from widget with TWIG</a><br/>
+    <a href="{{path}}?page=test/php">Page from widget with PHP</a><br/>
+    <a href="{{path}}?page=main/other">Other page</a><br/>
 {% endblock %}

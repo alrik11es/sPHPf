@@ -1,5 +1,5 @@
 <?php
-namespace coldstarstudios\databases;
+namespace coldstarstudios\datatypes;
 
 /**
  * This class is used to use a new data type called DataTable that allows
@@ -12,7 +12,7 @@ namespace coldstarstudios\databases;
 class DataTable {
     
     private $table_fields = array();
-    private $table_content = array();
+    private $table_contents = array();
     
     /**
      * Extracts a portion of the DataTable returning an array.

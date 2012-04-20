@@ -28,6 +28,7 @@ class Path {
             $path .= str_replace($page, '', $clean[0]);
            
             $path = str_replace($_SERVER['QUERY_STRING'], '', $path);
+            $path = str_replace('index.php', '', $path);
             
             return $path;
         } else
