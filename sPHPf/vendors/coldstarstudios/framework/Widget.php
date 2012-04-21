@@ -18,11 +18,13 @@ class Widget {
     
     function getWidgets(){
         // Load from widget folder
-        $widget_folder = scandir('widget/');
-        array_shift($widget_folder);array_shift($widget_folder);
-        foreach($widget_folder as $widget){
-            if(is_dir('widget/'.$widget)){
-                array_push($this->widget_view_folders, 'widget/'.$widget.'/view');
+        if(file_exists('widget/')){
+            $widget_folder = scandir('widget/');
+            array_shift($widget_folder);array_shift($widget_folder);
+            foreach($widget_folder as $widget){
+                if(is_dir('widget/'.$widget)){
+                    array_push($this->widget_view_folders, 'widget/'.$widget.'/view');
+                }
             }
         }
     }
