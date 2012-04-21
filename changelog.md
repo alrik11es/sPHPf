@@ -8,6 +8,7 @@ v 1.2.2
 - Improved the resize algorithm in image manipulation class.
 - Added support to non MOD REWRITE servers. (Unstable)
 - Added the possibility to eliminate the Widget folder.
+- Changed license file to GitHub format .md
 
 v 1.2.1
 

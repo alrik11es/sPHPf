@@ -79,7 +79,7 @@ Please refer to changelog.md
 
 ###License
 
-Please refer to license.txt
+Please refer to license.md
 
 Twig, RedBean and Spyc are used by sPHPf but it's not maintained or builded by us. Please
 refer to the LICENSE file inside each source code folders or in the code itself.
