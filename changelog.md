@@ -7,7 +7,7 @@ v 1.2.2
 - Added a good pagination class.
 - Improved the resize algorithm in image manipulation class.
 - Added support to non MOD REWRITE servers. (Unstable)
-- Added the possibility to eliminate the Widget folder.
+- Widget folder option deleted. (Innecesary)
 - Changed license file to GitHub format .md
 
 v 1.2.1

@@ -1,6 +1,5 @@
 <?php
 namespace coldstarstudios\framework;
-use coldstarstudios\framework\Widget;
 
 /**
  * This class generates a response in a simple way. Loads the view and
@@ -17,15 +16,11 @@ class Response implements interfaces\Response{
     public $vars = array();
     public $file_ext;
     private $twig;
-    
-    /** @var Widget */
-    private $widget;
+
     
     function __construct($view, $vars = array()) {
         $this->view = $view;
         $this->vars = $vars;
-        
-        $this->widget = new Widget();
         
         $splitted = preg_split("/\./", $view);
         $this->file_ext = $splitted[count($splitted)-1];
@@ -51,7 +46,7 @@ class Response implements interfaces\Response{
         $twig_config_file = 'config/twig_config.yaml';
         $data = \Spyc\Spyc::YAMLLoad($twig_config_file);
 
-        $filesystem = array_merge(array($data['twig_config']['templates']), $this->widget->widget_view_folders);
+        $filesystem = array_merge(array($data['twig_config']['templates']));
         $loader = new \Twig_Loader_Filesystem($filesystem);
 
         if(!file_exists($data['twig_config']['cache']) || !is_writable($data['twig_config']['cache']))
@@ -74,7 +69,7 @@ class Response implements interfaces\Response{
     function phpRender(){
         $this->vars['path'] = new Path();
         extract($this->vars);
-        $filesystem = array_merge(array('view'), $this->widget->widget_view_folders);
+        $filesystem = array_merge(array('view'));
         foreach($filesystem as $folder){
             if(file_exists($folder.'/'.$this->view))
                 include($folder.'/'.$this->view);

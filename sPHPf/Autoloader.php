@@ -26,17 +26,6 @@ class Autoloader{
                     array('/', '/', ''), $class).'.php'))
                 require_once $file;
             
-            // Load from widget folder
-            if(file_exists('widget/')){
-            $widget_folder = scandir('widget/');
-                foreach($widget_folder as $widget){
-                    if(is_dir('widget/'.$widget))
-                        if(is_file($file = self::$dirname.'/widget/'.$widget.'/'.str_replace(array('\\','_',"\0"),
-                                array('/', '/', ''), $class).'.php'))
-                            require_once $file;
-                }
-            }
-            
             // Or load from file
             if (is_file($file = self::$dirname.'/'.str_replace(array('\\','_', "\0"),
                     array('/', '/', ''), $class).'.php'))
