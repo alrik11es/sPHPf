@@ -122,5 +122,19 @@ class Validation {
             array_push($this->errors, array('message'=>$message));
         }
     }
+    
+    /**
+     * Checks if its a valid telephone number.
+     * @param type $param
+     * @param type $message 
+     */
+    function telephone($param, $message){
+        $match = '/^((\+)?(\d{2})[-])?(([\(])?((\d){3,5})([\)])?[-])|(\d{3,5})(\d{5,8}){1}?$/';
+        $answer = preg_match($match, $param);
+        if(empty($param) || !$answer){
+            $this->isValid = false;
+            array_push($this->errors, array('message'=>$message));
+        }
+    }
 }
 

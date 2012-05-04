@@ -33,6 +33,7 @@ class Error {
         $this->Application->data['error']['file'] = $this->exception->getFile();
         $this->Application->data['SERVER'] = $_SERVER;
         
+        // For SEO Purposes returning 404 not found
         header('HTTP/1.0 404 Not Found');
         
         try{

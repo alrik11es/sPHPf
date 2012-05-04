@@ -28,6 +28,9 @@ class Application implements interfaces\Application{
     /** @var Path */
     public $path;
     
+    // Application config_folder
+    public $config_folder = 'config/';
+    
     // Application folders
     public $folders = array();
     
@@ -35,15 +38,24 @@ class Application implements interfaces\Application{
     public $data = array();
 
     /**
-     * This constructor loads the main flow of the application.
+     * This constructor loads that kind of static things that every application needs.
      */
     function __construct() {
+        // Data Request class
+        $this->request = new Request();
+        // The path of the 
+        $this->path = new Path();
+    }
+    
+    /**
+     * This method is used to load configuration from file and subsequently
+     * the algorithms that use that config.
+     * @throws \Exception 
+     */
+    function loadConfig(){
         // Database connection
         $conn = new Connection();
         $this->connection = $conn->create();
-        
-        // Data Request class
-        $this->request = new Request();
         
         $app_config_file = "config/app_config.yaml";
         if(!file_exists($app_config_file))
@@ -54,7 +66,6 @@ class Application implements interfaces\Application{
         $app_config = $data['app_config'];
         
         $this->production = $app_config['production'];
-        $this->path = new Path();
         $this->folders['error'] = $app_config['error'];
         $this->folders['error_production'] = $app_config['error_production'];
     }
@@ -64,6 +75,7 @@ class Application implements interfaces\Application{
      * @param Controller $linked_controller 
      */
     function flow($controller){
+        $this->loadConfig();
         $this->response = $this->controllerExec($controller);
 
         if(!is_null($this->response))

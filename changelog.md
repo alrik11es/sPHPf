@@ -9,6 +9,8 @@ v 1.2.2
 - Added support to non MOD REWRITE servers. (Unstable)
 - Widget folder option deleted. (Innecesary)
 - Changed license file to GitHub format .md
+- Deleted Install directory (No longer needed)
+- Added new validation for telephones.
 
 v 1.2.1
 
