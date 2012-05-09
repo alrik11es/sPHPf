@@ -65,15 +65,19 @@ class Pagination{
      */
     function simpleFooter($actual_count){
         $pagination = '';
+        if(preg_match('/\?/', $this->page))
+            $separator = '&';
+        else
+            $separator = '?';
         
         if($this->start_num >= $this->reg_num){
             $fl = $this->start_num - $this->reg_num;
-            $pagination .= "<input type=\"button\" onclick=\"window.location='$this->page&$this->var_name=$fl';\" value=\"$this->before_term\">";
+            $pagination .= "<input type=\"button\" onclick=\"window.location='$this->page$separator$this->var_name=$fl';\" value=\"$this->before_term\">";
         }
         
         if($actual_count == $this->reg_num){
             $fr = $this->start_num + $this->reg_num;
-            $pagination .= "<input type=\"button\" onclick=\"window.location='$this->page&$this->var_name=$fr';\" value=\"$this->next_term\">";
+            $pagination .= "<input type=\"button\" onclick=\"window.location='$this->page$separator$this->var_name=$fr';\" value=\"$this->next_term\">";
         }
         return $pagination;
     }
