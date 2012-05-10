@@ -11,6 +11,8 @@ v 1.2.2
 - Changed license file to GitHub format .md
 - Deleted Install directory (No longer needed)
 - Added new validation for telephones.
+- Added CRUD interface for CRUD operations.
+- Minor change in pagination class.
 
 v 1.2.1
 
