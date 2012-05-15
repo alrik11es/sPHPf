@@ -13,6 +13,8 @@ v 1.2.2
 - Added new validation for telephones.
 - Added CRUD interface for CRUD operations.
 - Minor change in pagination class.
+- Added debug var to the Autoloader.php
+- It's possible now to echo a response or whatever.
 
 v 1.2.1
 

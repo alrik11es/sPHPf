@@ -75,4 +75,10 @@ class Response implements interfaces\Response{
                 include($folder.'/'.$this->view);
         }
     }
+    
+    function __toString(){
+        $string = '';
+        $string .= $this->renderView();
+        return $string;
+    }
 }
