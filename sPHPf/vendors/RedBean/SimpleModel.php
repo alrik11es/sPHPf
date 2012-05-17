@@ -1,13 +1,13 @@
 <?php
 /**
  * SimpleModel
+ * 
  * @file 		RedBean/SimpleModel.php
  * @description	Part of FUSE
  * @author      Gabor de Mooij and the RedBeanPHP Team
- * @license		BSD
+ * @license		BSD/GPLv2
  *
- *
- * (c) G.J.G.T. (Gabor) de Mooij
+ * copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community
  * This source file is subject to the BSD/GPLv2 License that is bundled
  * with this source code in the file license.txt.
  */
@@ -61,15 +61,23 @@ class RedBean_SimpleModel {
 	public function __isset($key) {
 		return (isset($this->bean->$key));
 	}
-
+	
 	/**
-	 *
-	 * @param  $type
-	 * @return mixed
+	 * Box the bean using the current model.
+	 * 
+	 * @return RedBean_SimpleModel $box a bean in a box
 	 */
-	protected function getConnected($type) {
-		return $this->bean->getMeta("assoc.$type");
+	public function box() {
+		return $this;
 	}
-
+	
+	/**
+	 * Unbox the bean from the model.
+	 * 
+	 * @return RedBean_OODBBean $bean bean 
+	 */
+	public function unbox(){
+		return $this->bean;
+	}
 
 }

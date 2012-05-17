@@ -2,19 +2,21 @@
 /**
  * Observable
  * Base class for Observables
- * @file 		RedBean/Observable.php
+ * 
+ * @file 			RedBean/Observable.php
  * @description		Part of the observer pattern in RedBean
- * @author			Gabor de Mooij
- * @license			BSD
+ *
+ * @author			Gabor de Mooij and the RedBeanPHP community
+ * @license			BSD/GPLv2
  *
  *
- * (c) G.J.G.T. (Gabor) de Mooij
+ * copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community.
  * This source file is subject to the BSD/GPLv2 License that is bundled
  * with this source code in the file license.txt.
  */
 abstract class RedBean_Observable {
 	/**
-	 *
+	 * Array that keeps track of observers.
 	 * @var array
 	 */
 	private $observers = array();
@@ -60,8 +62,5 @@ abstract class RedBean_Observable {
 		foreach($this->observers[$eventname] as $observer) {
 			$observer->onEvent( $eventname, $info );
 		}
-
 	}
-
-
 }

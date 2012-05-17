@@ -6,8 +6,12 @@
  * @description			Represents a SQLite Database to RedBean
  *						To write a driver for a different database for RedBean
  *						you should only have to change this file.
- * @author				Gabor de Mooij
- * @license				BSD
+ * @author				Gabor de Mooij and the RedBeanPHP Community
+ * @license				BSD/GPLv2
+ * 
+ * (c) copyright G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community.
+ * This source file is subject to the BSD/GPLv2 License that is bundled
+ * with this source code in the file license.txt.
  */
 class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter implements RedBean_QueryWriter {
 	/**
@@ -60,32 +64,6 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 */
 	const C_DATATYPE_SPECIFIED = 99;
 
-
-
-
-	/**
-	 * @var array
-	 * Supported Column Types
-	 */
-	public $typeno_sqltype = array(
-			  RedBean_QueryWriter_SQLiteT::C_DATATYPE_INTEGER=>"INTEGER",
-			  RedBean_QueryWriter_SQLiteT::C_DATATYPE_NUMERIC=>"NUMERIC",
-			  RedBean_QueryWriter_SQLiteT::C_DATATYPE_TEXT=>"TEXT",
-	);
-
-	/**
-	 *
-	 * @var array
-	 * Supported Column Types and their
-	 * constants (magic numbers)
-	 */
-	public $sqltype_typeno = array(
-			  "INTEGER"=>RedBean_QueryWriter_SQLiteT::C_DATATYPE_INTEGER,
-			  "NUMERIC"=>RedBean_QueryWriter_SQLiteT::C_DATATYPE_NUMERIC,
-			  "TEXT"=>RedBean_QueryWriter_SQLiteT::C_DATATYPE_TEXT,
-	);
-
-
 	/**
 	 * Constructor
 	 * The Query Writer Constructor also sets up the database
@@ -93,6 +71,18 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 * @param RedBean_Adapter_DBAdapter $adapter adapter
 	 */
 	public function __construct( RedBean_Adapter $adapter ) {
+	
+		$this->typeno_sqltype = array(
+			  RedBean_QueryWriter_SQLiteT::C_DATATYPE_INTEGER=>'INTEGER',
+			  RedBean_QueryWriter_SQLiteT::C_DATATYPE_NUMERIC=>'NUMERIC',
+			  RedBean_QueryWriter_SQLiteT::C_DATATYPE_TEXT=>'TEXT',
+		);
+		
+		$this->sqltype_typeno = array();
+		foreach($this->typeno_sqltype as $k=>$v)
+		$this->sqltype_typeno[$v]=$k;
+		
+				
 		$this->adapter = $adapter;
 		parent::__construct($adapter);
 	}
@@ -115,18 +105,18 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 *
 	 * @return integer $type type
 	 */
-	public function scanType( $value ) {
-		$sz = ($this->startsWithZeros($value));
-		if (!$sz && $value===null) return self::C_DATATYPE_INTEGER; //for fks
-		if (!$sz && is_numeric($value) && (intval($value)==$value) && $value<2147483648) return self::C_DATATYPE_INTEGER;
-		if (!$sz && (is_numeric($value) && $value < 2147483648)
-				  || preg_match("/\d\d\d\d\-\d\d\-\d\d/",$value)
-				  || preg_match("/\d\d\d\d\-\d\d\-\d\d\s\d\d:\d\d:\d\d/",$value)
+	public function scanType( $value, $flagSpecial=false ) {
+		$this->svalue=$value;
+		if ($value===false) return self::C_DATATYPE_INTEGER;
+		if ($value===null) return self::C_DATATYPE_INTEGER; //for fks
+		if ($this->startsWithZeros($value)) return self::C_DATATYPE_TEXT;
+		if (is_numeric($value) && (intval($value)==$value) && $value<2147483648) return self::C_DATATYPE_INTEGER;
+		if ((is_numeric($value) && $value < 2147483648)
+				  || preg_match('/\d{4}\-\d\d\-\d\d/',$value)
+				  || preg_match('/\d{4}\-\d\d\-\d\d\s\d\d:\d\d:\d\d/',$value)
 		) {
 			return self::C_DATATYPE_NUMERIC;
 		}
-
-
 		return self::C_DATATYPE_TEXT;
 	}
 
@@ -138,7 +128,6 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 * @param integer $type	  type
 	 */
 	public function addColumn( $table, $column, $type) {
-		$table = $this->getFormattedTableName($table);
 		$column = $this->check($column);
 		$table = $this->check($table);
 		$type=$this->typeno_sqltype[$type];
@@ -147,14 +136,22 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	}
 
 	/**
-	 * Returns the Type Code for a Column Description
+	 * Returns the Type Code for a Column Description.
+	 * Given an SQL column description this method will return the corresponding
+	 * code for the writer. If the include specials flag is set it will also
+	 * return codes for special columns. Otherwise special columns will be identified
+	 * as specified columns.
 	 *
-	 * @param string $typedescription description
+	 * @param string  $typedescription description
+	 * @param boolean $includeSpecials whether you want to get codes for special columns as well
 	 *
 	 * @return integer $typecode code
 	 */
-	public function code( $typedescription ) {
-		return ((isset($this->sqltype_typeno[$typedescription])) ? $this->sqltype_typeno[$typedescription] : 99);
+	public function code( $typedescription, $includeSpecials = false ) {
+		$r =  ((isset($this->sqltype_typeno[$typedescription])) ? $this->sqltype_typeno[$typedescription] : 99);
+		if ($includeSpecials) return $r;
+		if ($r > self::C_DATATYPE_SPECIFIED) return self::C_DATATYPE_SPECIFIED;
+		return $r;
 	}
 
 	/**
@@ -184,13 +181,12 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	public function widenColumn( $type, $column, $datatype ) {
 		$table = $this->safeTable($type,true);
 		$column = $this->safeColumn($column,true);
-		$idfield = $this->safeColumn($this->getIDfield($type),true);
 		$newtype = $this->typeno_sqltype[$datatype];
 		$oldColumns = $this->getColumns($type);
 		$oldColumnNames = $this->quote(array_keys($oldColumns));
-		$newTableDefStr="";
+		$newTableDefStr='';
 		foreach($oldColumns as $oldName=>$oldType) {
-			if ($oldName != $idfield) {
+			if ($oldName != 'id') {
 				if ($oldName!=$column) {
 					$newTableDefStr .= ",`$oldName` $oldType";
 				}
@@ -204,7 +200,7 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 		$q[] = "CREATE TEMPORARY TABLE tmp_backup(".implode(",",$oldColumnNames).");";
 		$q[] = "INSERT INTO tmp_backup SELECT * FROM `$table`;";
 		$q[] = "DROP TABLE `$table`;";
-		$q[] = "CREATE TABLE `$table` ( `$idfield` INTEGER PRIMARY KEY AUTOINCREMENT  $newTableDefStr  );";
+		$q[] = "CREATE TABLE `$table` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  $newTableDefStr  );";
 		$q[] = "INSERT INTO `$table` SELECT * FROM tmp_backup;";
 		$q[] = "DROP TABLE tmp_backup;";
 		foreach($q as $sq) {
@@ -229,11 +225,8 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 * @param string $table table
 	 */
 	public function createTable( $table ) {
-		$idfield = $this->safeColumn($this->getIDfield($table));
 		$table = $this->safeTable($table);
-		$sql = "
-                     CREATE TABLE $table ( $idfield INTEGER PRIMARY KEY AUTOINCREMENT )
-				  ";
+		$sql = "CREATE TABLE $table ( id INTEGER PRIMARY KEY AUTOINCREMENT ) ";
 		$this->adapter->exec( $sql );
 	}
 
@@ -249,14 +242,10 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 		$columnsRaw = $this->adapter->get("PRAGMA table_info('$table')");
 		$columns = array();
 		foreach($columnsRaw as $r) {
-			$columns[$r["name"]]=$r["type"];
+			$columns[$r['name']]=$r['type'];
 		}
 		return $columns;
 	}
-
-
-
-
 
 	/**
 	 * Adds a Unique index constrain to the table.
@@ -269,8 +258,8 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 */
 	public function addUniqueIndex( $table,$columns ) {
 		$table = $this->safeTable($table);
-		$name = "UQ_".sha1(implode(',',$columns));
-		$sql = "CREATE UNIQUE INDEX IF NOT EXISTS $name ON $table (".implode(",",$columns).")";
+		$name = 'UQ_'.sha1(implode(',',$columns));
+		$sql = "CREATE UNIQUE INDEX IF NOT EXISTS $name ON $table (".implode(',',$columns).")";
 		$this->adapter->exec($sql);
 	}
 
@@ -286,14 +275,12 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 * @return boolean $isInArray whether state is in list
 	 */
 	public function sqlStateIn($state, $list) {
-		$sqlState = "0";
-		if ($state == "HY000") $sqlState = RedBean_QueryWriter::C_SQLSTATE_NO_SUCH_TABLE;
-		if ($state == "23000") $sqlState = RedBean_QueryWriter::C_SQLSTATE_INTEGRITY_CONSTRAINT_VIOLATION;
-		return in_array($sqlState, $list);
+		$stateMap = array(
+			'HY000'=>RedBean_QueryWriter::C_SQLSTATE_NO_SUCH_TABLE,
+			'23000'=>RedBean_QueryWriter::C_SQLSTATE_INTEGRITY_CONSTRAINT_VIOLATION
+		);
+		return in_array((isset($stateMap[$state]) ? $stateMap[$state] : '0'),$list);
 	}
-
-
-
 
 	/**
 	 * Counts rows in a table.
@@ -311,15 +298,16 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	/**
 	 * Adds a foreign key to a type
 	 *
-	 * @param  string $type        type you want to modify table of
-	 * @param  string $targetType  target type
-	 * @param  string $field       field of the type that needs to get the fk
-	 * @param  string $targetField field where the fk needs to point to
+	 * @param string  $type        type you want to modify table of
+	 * @param string  $targetType  target type
+	 * @param string  $field       field of the type that needs to get the fk
+	 * @param string  $targetField field where the fk needs to point to
+	 * @param boolean $isDep       whether this field is dependent on it's referenced record
 	 *
 	 * @return bool $success whether an FK has been added
 	 */
-	public function addFK( $type, $targetType, $field, $targetField) {
-		return $this->buildFK($type, $targetType, $field, $targetField);
+	public function addFK( $type, $targetType, $field, $targetField, $isDep=false) {
+		return $this->buildFK($type, $targetType, $field, $targetField, $isDep);
 	}
 
 	/**
@@ -335,31 +323,32 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 */
 
 	protected function buildFK($type, $targetType, $field, $targetField,$constraint=false) {
-
 			try{
+				$consSQL = ($constraint ? 'CASCADE' : 'SET NULL');
 				$table = $this->safeTable($type,true);
 				$targetTable = $this->safeTable($targetType,true);
 				$field = $this->safeColumn($field,true);
 				$targetField = $this->safeColumn($targetField,true);
-				$idfield = $this->safeColumn($this->getIDfield($type),true);
 				$oldColumns = $this->getColumns($type);
 				$oldColumnNames = $this->quote(array_keys($oldColumns));
-				$newTableDefStr="";
+				$newTableDefStr='';
 				foreach($oldColumns as $oldName=>$oldType) {
-					if ($oldName != $idfield) {
+					if ($oldName != 'id') {
 						$newTableDefStr .= ",`$oldName` $oldType";
 					}
 				}
-
 				//retrieve old foreign keys
 				$sqlGetOldFKS = "PRAGMA foreign_key_list('$table'); ";
 				$oldFKs = $this->adapter->get($sqlGetOldFKS);
-
 				$restoreFKSQLSnippets = "";
 				foreach($oldFKs as $oldFKInfo) {
-					if ($oldFKInfo['from']==$field) {
+					if ($oldFKInfo['from']==$field && $oldFKInfo['on_delete']==$consSQL) {
 						//this field already has a FK.
 						return false;
+					}
+					if ($oldFKInfo['from']==$field && $oldFKInfo['on_delete']!=$consSQL) {
+						//this field already has a FK.but needs to be replaced
+						continue;
 					}
 					$oldTable = $table;
 					$oldField = $oldFKInfo['from'];
@@ -367,38 +356,31 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 					$oldTargetField = $oldFKInfo['to'];
 					$restoreFKSQLSnippets .= ", FOREIGN KEY(`$oldField`) REFERENCES `$oldTargetTable`(`$oldTargetField`) ON DELETE ".$oldFKInfo['on_delete'];
 				}
-
 				$fkDef = $restoreFKSQLSnippets;
-
 				if ($constraint) {
-					$fkDef .= ', FOREIGN KEY(`'.$field.'`) REFERENCES `'.$targetTable.'`(`'.$targetField.'`) ON DELETE CASCADE ';
-
+					$fkDef .= ", FOREIGN KEY(`$field`) REFERENCES `$targetTable`(`$targetField`) ON DELETE CASCADE ";
 				}
 				else {
-					$fkDef .= ', FOREIGN KEY(`'.$field.'`) REFERENCES `'.$targetTable.'`(`'.$targetField.'`) ON DELETE SET NULL ON UPDATE SET NULL';
-
+					$fkDef .= ", FOREIGN KEY(`$field`) REFERENCES `$targetTable`(`$targetField`) ON DELETE SET NULL ON UPDATE SET NULL";
 				}
-
 				$q = array();
 				$q[] = "DROP TABLE IF EXISTS tmp_backup;";
-				$q[] = "CREATE TEMPORARY TABLE tmp_backup(".implode(",",$oldColumnNames).");";
+				$q[] = "CREATE TEMPORARY TABLE tmp_backup(".implode(',',$oldColumnNames).");";
 				$q[] = "INSERT INTO tmp_backup SELECT * FROM `$table`;";
 				$q[] = "PRAGMA foreign_keys = 0 ";
 				$q[] = "DROP TABLE `$table`;";
-				$q[] = "CREATE TABLE `$table` ( `$idfield` INTEGER PRIMARY KEY AUTOINCREMENT  $newTableDefStr $fkDef );";
+				$q[] = "CREATE TABLE `$table` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  $newTableDefStr $fkDef );";
 				$q[] = "INSERT INTO `$table` SELECT * FROM tmp_backup;";
 				$q[] = "DROP TABLE tmp_backup;";
 				$q[] = "PRAGMA foreign_keys = 1 ";
-
-
 				foreach($q as $sq) {
 					$this->adapter->exec($sq);
 				}
+				
+				
+				return true;
 			}
-			catch(Exception $e){
-
-			}
-
+			catch(Exception $e){ return false; }
 	}
 
 
@@ -411,35 +393,21 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 * @param string			  $table2    table2
 	 * @param string			  $property1 property1
 	 * @param string			  $property2 property2
-	 * @param boolean			  $dontCache want to have cache?
 	 *
 	 * @return boolean $succes whether the constraint has been applied
 	 */
-	protected  function constrain($table, $table1, $table2, $property1, $property2, $dontCache) {
-
-
-		try{
-			$writer = $this;
-
-			$adapter = $this->adapter;
-			//$fkCode = "fk".md5($table.$property1.$property2);
-
-			$idfield1 = $writer->getIDField($table1);
-			$idfield2 = $writer->getIDField($table2);
-
-			$this->buildFK($table,$table1,$property1,$idfield1,true);
-			$this->buildFK($table,$table2,$property2,$idfield2,true);
-
-			return true;
-		}
-		catch(Exception $e){
-
-			return false;
-		}
+	protected  function constrain($table, $table1, $table2, $property1, $property2) {
+		$writer = $this;
+		$adapter = $this->adapter;
+		$firstState = $this->buildFK($table,$table1,$property1,'id',true);
+		$secondState = $this->buildFK($table,$table2,$property2,'id',true);
+		return ($firstState && $secondState);
 	}
 
 	/**
 	 * Removes all tables and views from the database.
+	 * 
+	 * @return void
 	 */
 	public function wipeAll() {
 		$this->adapter->exec('PRAGMA foreign_keys = 0 ');
@@ -454,9 +422,6 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 	 		catch(Exception $e){}
 		}
 		$this->adapter->exec('PRAGMA foreign_keys = 1 ');
-
 	}
-
-
 
 }

@@ -15,6 +15,7 @@ v 1.2.2
 - Minor change in pagination class.
 - Added debug var to the Autoloader.php
 - It's possible now to echo a response or whatever.
+- RedBean updated to v3.2
 
 v 1.2.1
 

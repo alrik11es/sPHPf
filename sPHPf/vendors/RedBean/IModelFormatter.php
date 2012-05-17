@@ -1,13 +1,17 @@
 <?php
-/*
- * @author			Gabor de Mooij
- * @license			BSD
+/**
+ * RedBean interface for Model Formatting - Part of FUSE
+ * 
+ * @file			RedBean/ModelFormatter.php
+ * @description 	RedBean IModelFormatter
+ *
+ * @author			Gabor de Mooij and the RedBeanPHP Community
+ * @license			BSD/GPLv2
  *
  *
- * (c) G.J.G.T. (Gabor) de Mooij
+ * copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community
  * This source file is subject to the BSD/GPLv2 License that is bundled
  * with this source code in the file license.txt.
- * Interface definition of a Model Formatter for Fuse
  */
 interface RedBean_IModelFormatter {
 

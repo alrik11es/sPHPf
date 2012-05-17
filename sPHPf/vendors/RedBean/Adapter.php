@@ -4,10 +4,10 @@
  *
  * @file 			RedBean/Adapter.php
  * @description		Describes the API for a RedBean Database Adapter.
- * @author			Gabor de Mooij
- * @license			BSD
+ * @author			Gabor de Mooij and the RedBeanPHP Community
+ * @license			BSD/GPLv2
  *
- * (c) G.J.G.T. (Gabor) de Mooij
+ * (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community.
  * This source file is subject to the BSD/GPLv2 License that is bundled
  * with this source code in the file license.txt.
  *
@@ -129,14 +129,7 @@ interface RedBean_Adapter {
 	 * @return object $driver driver
 	 */
 	public function getDatabase();
-
-	/**
-	 * Returns the latest error message; if any.
-	 *
-	 * @return string $message error message from server
-	 */
-	public function getErrorMsg();
-
+	
 	/**
 	 * This method is part of the RedBean Transaction Management
 	 * mechanisms.
@@ -157,5 +150,10 @@ interface RedBean_Adapter {
 	 * Rolls back the transaction.
 	 */
 	public function rollback();
+	
+	/**
+	 * Closes database connection.
+	 */
+	public function close();
 
 }

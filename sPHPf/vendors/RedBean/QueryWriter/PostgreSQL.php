@@ -1,19 +1,18 @@
 <?php
 /**
  * RedBean PostgreSQL Query Writer
- * @file				RedBean/QueryWriter/PostgreSQL.php
- * @description	QueryWriter for the PostgreSQL database system.
+ * 
+ * @file			RedBean/QueryWriter/PostgreSQL.php
+ * @description		QueryWriter for the PostgreSQL database system.
+ * @author			Gabor de Mooij and the RedBeanPHP Community
+ * @license			BSD/GPLv2
  *
- * @author			Gabor de Mooij
- * @license			BSD
- *
- *
- * (c) G.J.G.T. (Gabor) de Mooij
+ * (c) copyright G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community.
  * This source file is subject to the BSD/GPLv2 License that is bundled
  * with this source code in the file license.txt.
  */
 class RedBean_QueryWriter_PostgreSQL extends RedBean_QueryWriter_AQueryWriter implements RedBean_QueryWriter {
-
+	
 	/**
 	 * DATA TYPE
 	 * Integer Data Type
@@ -34,49 +33,54 @@ class RedBean_QueryWriter_PostgreSQL extends RedBean_QueryWriter_AQueryWriter im
 	 * @var integer
 	 */
 	const C_DATATYPE_TEXT = 3;
-
+	
+	
 	/**
-	 * @var array
-	 * Supported Column Types
+	 * Special type date for storing date values: YYYY-MM-DD
+	 * @var integer
 	 */
-	public $typeno_sqltype = array(
-			  self::C_DATATYPE_INTEGER=>" integer ",
-			  self::C_DATATYPE_DOUBLE=>" double precision ",
-			  self::C_DATATYPE_TEXT=>" text "
-	);
-
+	const C_DATATYPE_SPECIAL_DATE = 80;
+	
 	/**
-	 *
-	 * @var array
-	 * Supported Column Types and their
-	 * constants (magic numbers)
+	 * Special type date for storing date values: YYYY-MM-DD HH:MM:SS
+	 * @var integer
 	 */
-	public $sqltype_typeno = array(
-			  "integer"=>self::C_DATATYPE_INTEGER,
-			  "double precision" => self::C_DATATYPE_DOUBLE,
-			  "text"=>self::C_DATATYPE_TEXT
-	);
+	const C_DATATYPE_SPECIAL_DATETIME = 81;
+	
+	const C_DATATYPE_SPECIAL_POINT		= 101;
+	const C_DATATYPE_SPECIAL_LINE		= 102;
+	const C_DATATYPE_SPECIAL_LSEG		= 103;
+	const C_DATATYPE_SPECIAL_BOX		= 104;
+	const C_DATATYPE_SPECIAL_CIRCLE		= 105;
+	const C_DATATYPE_SPECIAL_POLYGON	= 106;
+	
+	
+	
+	/**
+	 * Specified field type cannot be overruled
+	 * @var integer
+	 */
+	const C_DATATYPE_SPECIFIED = 99;
+	
 
 	/**
-	 *
-	 * @var RedBean_DBAdapter
 	 * Holds Database Adapter
+	 * @var RedBean_DBAdapter
 	 */
 	protected $adapter;
 
 	/**
-	 * @var string
 	 * character to escape keyword table/column names
+	 * @var string
 	 */
-  protected $quoteCharacter = '"';
+	protected $quoteCharacter = '"';
 
-  /**
-   *
-   * @var string
-   * Default Value
-   */
- 	protected $defaultValue = 'DEFAULT';
-
+	/**
+	 * Default Value
+	 * @var string
+	 */
+	protected $defaultValue = 'DEFAULT';
+	
 	/**
 	* This method returns the datatype to be used for primary key IDS and
 	* foreign keys. Returns one if the data type constants.
@@ -86,17 +90,17 @@ class RedBean_QueryWriter_PostgreSQL extends RedBean_QueryWriter_AQueryWriter im
 	public function getTypeForID() {
 		return self::C_DATATYPE_INTEGER;
 	}
-
-  /**
-   * Returns the insert suffix SQL Snippet
-   *
-   * @param string $table table
-   *
-   * @return  string $sql SQL Snippet
-   */
-  protected function getInsertSuffix($table) {
-    return "RETURNING ".$this->getIDField($table);
-  }
+	
+	/**
+	 * Returns the insert suffix SQL Snippet
+	 *
+	 * @param string $table table
+	 *
+	 * @return  string $sql SQL Snippet
+	 */
+	protected function getInsertSuffix($table) {
+		return 'RETURNING id ';
+	}
 
 	/**
 	 * Constructor
@@ -105,6 +109,28 @@ class RedBean_QueryWriter_PostgreSQL extends RedBean_QueryWriter_AQueryWriter im
 	 * @param RedBean_DBAdapter $adapter adapter
 	 */
 	public function __construct( RedBean_Adapter_DBAdapter $adapter ) {
+		
+		
+		$this->typeno_sqltype = array(
+				  self::C_DATATYPE_INTEGER=>' integer ',
+				  self::C_DATATYPE_DOUBLE=>' double precision ',
+				  self::C_DATATYPE_TEXT=>' text ',
+				  self::C_DATATYPE_SPECIAL_DATE => ' date ',
+				  self::C_DATATYPE_SPECIAL_DATETIME => ' timestamp without time zone ',
+				  self::C_DATATYPE_SPECIAL_POINT => ' point ',
+				  self::C_DATATYPE_SPECIAL_LINE => ' line ',
+				  self::C_DATATYPE_SPECIAL_LSEG => ' lseg ',
+				  self::C_DATATYPE_SPECIAL_BOX => ' box ',
+				  self::C_DATATYPE_SPECIAL_CIRCLE => ' circle ',
+				  self::C_DATATYPE_SPECIAL_POLYGON => ' polygon ',
+			
+		);
+
+		$this->sqltype_typeno = array();
+		foreach($this->typeno_sqltype as $k=>$v)
+		$this->sqltype_typeno[trim(strtolower($v))]=$k;
+		
+		
 		$this->adapter = $adapter;
 		parent::__construct();
 	}
@@ -116,7 +142,7 @@ class RedBean_QueryWriter_PostgreSQL extends RedBean_QueryWriter_AQueryWriter im
 	 */
 	public function getTables() {
 		return $this->adapter->getCol( "select table_name from information_schema.tables
-where table_schema = 'public'" );
+		where table_schema = 'public'" );
 	}
 
 	/**
@@ -125,9 +151,8 @@ where table_schema = 'public'" );
 	 * @param string $table table to create
 	 */
 	public function createTable( $table ) {
-		$idfield = $this->getIDfield($table);
 		$table = $this->safeTable($table);
-		$sql = " CREATE TABLE $table ($idfield SERIAL PRIMARY KEY); ";
+		$sql = " CREATE TABLE $table (id SERIAL PRIMARY KEY); ";
 		$this->adapter->exec( $sql );
 	}
 
@@ -142,7 +167,7 @@ where table_schema = 'public'" );
 		$table = $this->safeTable($table, true);
 		$columnsRaw = $this->adapter->get("select column_name, data_type from information_schema.columns where table_name='$table'");
 		foreach($columnsRaw as $r) {
-			$columns[$r["column_name"]]=$r["data_type"];
+			$columns[$r['column_name']]=$r['data_type'];
 		}
 		return $columns;
 	}
@@ -155,9 +180,39 @@ where table_schema = 'public'" );
 	 *
 	 * @return integer $type type code for this value
 	 */
-	public function scanType( $value ) {
-
-		// added value===null
+	public function scanType( $value, $flagSpecial=false ) {
+		
+		$this->svalue=$value;
+		
+		if ($flagSpecial && $value) {
+			if (preg_match('/^\d{4}\-\d\d-\d\d$/',$value)) {
+				return RedBean_QueryWriter_PostgreSQL::C_DATATYPE_SPECIAL_DATE;
+			}
+			if (preg_match('/^\d{4}\-\d\d-\d\d\s\d\d:\d\d:\d\d(\.\d{1,6})?$/',$value)) {
+				return RedBean_QueryWriter_PostgreSQL::C_DATATYPE_SPECIAL_DATETIME;
+			}
+			if (strpos($value,'POINT(')===0) {
+				$this->svalue = str_replace('POINT','',$value);
+				return RedBean_QueryWriter_PostgreSQL::C_DATATYPE_SPECIAL_POINT;
+			}
+			if (strpos($value,'LSEG(')===0) {
+				$this->svalue = str_replace('LSEG','',$value);
+				return RedBean_QueryWriter_PostgreSQL::C_DATATYPE_SPECIAL_LSEG;
+			}
+			if (strpos($value,'BOX(')===0) {
+				$this->svalue = str_replace('BOX','',$value);
+				return RedBean_QueryWriter_PostgreSQL::C_DATATYPE_SPECIAL_BOX;
+			}
+			if (strpos($value,'CIRCLE(')===0) {
+				$this->svalue = str_replace('CIRCLE','',$value);
+				return RedBean_QueryWriter_PostgreSQL::C_DATATYPE_SPECIAL_CIRCLE;
+			}
+			if (strpos($value,'POLYGON(')===0) {
+				$this->svalue = str_replace('POLYGON','',$value);
+				return RedBean_QueryWriter_PostgreSQL::C_DATATYPE_SPECIAL_POLYGON;
+			}
+		}
+		
 		$sz = ($this->startsWithZeros($value));
 		if ($sz) return self::C_DATATYPE_TEXT;
 		if ($value===null || ($value instanceof RedBean_Driver_PDO_NULL) ||(is_numeric($value)
@@ -175,14 +230,22 @@ where table_schema = 'public'" );
 	}
 
 	/**
-	 * Returns the Type Code for a Column Description
+	 * Returns the Type Code for a Column Description.
+	 * Given an SQL column description this method will return the corresponding
+	 * code for the writer. If the include specials flag is set it will also
+	 * return codes for special columns. Otherwise special columns will be identified
+	 * as specified columns.
 	 *
-	 * @param string $typedescription type description to get code for
+	 * @param string  $typedescription description
+	 * @param boolean $includeSpecials whether you want to get codes for special columns as well
 	 *
-	 * @return integer $typecode type code
+	 * @return integer $typecode code
 	 */
-	public function code( $typedescription ) {
-		return ((isset($this->sqltype_typeno[$typedescription])) ? $this->sqltype_typeno[$typedescription] : 99);
+	public function code( $typedescription, $includeSpecials = false ) {
+		$r = ((isset($this->sqltype_typeno[$typedescription])) ? $this->sqltype_typeno[$typedescription] : 99);
+		if ($includeSpecials) return $r;
+		if ($r > self::C_DATATYPE_SPECIFIED) return self::C_DATATYPE_SPECIFIED;
+		return $r;
 	}
 
 	/**
@@ -202,11 +265,7 @@ where table_schema = 'public'" );
 		$column = $this->safeColumn($column);
 		$newtype = $this->typeno_sqltype[$type];
 		$changecolumnSQL = "ALTER TABLE $table \n\t ALTER COLUMN $column TYPE $newtype ";
-		try {
-			$this->adapter->exec( $changecolumnSQL );
-		}catch(Exception $e) {
-			die($e->getMessage());
-		}
+		$this->adapter->exec( $changecolumnSQL );
 	}
 
 	/**
@@ -243,13 +302,13 @@ where table_schema = 'public'" );
 		$name = "UQ_".sha1($table.implode(',',$columns));
 		if ($r) {
 			foreach($r as $i) {
-				if (strtolower( $i["index_name"] )== strtolower( $name )) {
+				if (strtolower( $i['index_name'] )== strtolower( $name )) {
 					return;
 				}
 			}
 		}
 		$sql = "ALTER TABLE \"$table\"
-                ADD CONSTRAINT $name UNIQUE (".implode(",",$columns).")";
+                ADD CONSTRAINT $name UNIQUE (".implode(',',$columns).")";
 		$this->adapter->exec($sql);
 	}
 
@@ -265,13 +324,12 @@ where table_schema = 'public'" );
 	 * @return boolean $isInArray whether state is in list
 	 */
 	public function sqlStateIn($state, $list) {
-
-		$sqlState = "0";
-		if ($state == "42P01") $sqlState = RedBean_QueryWriter::C_SQLSTATE_NO_SUCH_TABLE;
-		if ($state == "42703") $sqlState = RedBean_QueryWriter::C_SQLSTATE_NO_SUCH_COLUMN;
-		if ($state == "23505") $sqlState = RedBean_QueryWriter::C_SQLSTATE_INTEGRITY_CONSTRAINT_VIOLATION;
-
-		return in_array($sqlState, $list);
+		$stateMap = array(
+			'42P01'=>RedBean_QueryWriter::C_SQLSTATE_NO_SUCH_TABLE,
+			'42703'=>RedBean_QueryWriter::C_SQLSTATE_NO_SUCH_COLUMN,
+			'23505'=>RedBean_QueryWriter::C_SQLSTATE_INTEGRITY_CONSTRAINT_VIOLATION
+		);
+		return in_array((isset($stateMap[$state]) ? $stateMap[$state] : '0'),$list);
 	}
 
 	/**
@@ -285,50 +343,67 @@ where table_schema = 'public'" );
 	 *
 	 * @return bool $success whether an FK has been added
 	 */
-	public function addFK( $type, $targetType, $field, $targetField) {
+	public function addFK( $type, $targetType, $field, $targetField, $isDep = false) {
 		try{
 			$table = $this->safeTable($type);
 			$column = $this->safeColumn($field);
 			$tableNoQ = $this->safeTable($type,true);
 			$columnNoQ = $this->safeColumn($field,true);
 			$targetTable = $this->safeTable($targetType);
+			$targetTableNoQ = $this->safeTable($targetType,true);
 			$targetColumn  = $this->safeColumn($targetField);
-			$fkCode = $tableNoQ.'_'.$columnNoQ.'_fkey';
-			$sql = "
-						SELECT
-								c.oid,
-								n.nspname,
-								c.relname,
-								n2.nspname,
-								c2.relname,
-								cons.conname
-						FROM pg_class c
-						JOIN pg_namespace n ON n.oid = c.relnamespace
-						LEFT OUTER JOIN pg_constraint cons ON cons.conrelid = c.oid
-						LEFT OUTER JOIN pg_class c2 ON cons.confrelid = c2.oid
-						LEFT OUTER JOIN pg_namespace n2 ON n2.oid = c2.relnamespace
-						WHERE c.relkind = 'r'
-						AND n.nspname IN ('public')
-						AND (cons.contype = 'f' OR cons.contype IS NULL)
-						AND
-						(  cons.conname = '{$fkCode}' )
-
-					  ";
-			$rows = $this->adapter->get( $sql );
-			if (!count($rows)) {
-				try{
-					$this->adapter->exec("ALTER TABLE  $table
-					ADD FOREIGN KEY (  $column ) REFERENCES  $targetTable (
-					$targetColumn) ON DELETE SET NULL ON UPDATE SET NULL DEFERRABLE ;");
-					return true;
-				}
-				catch(Exception $e) {
-				}
+			$targetColumnNoQ  = $this->safeColumn($targetField,true);
+			
+			
+			$sql = "SELECT
+					tc.constraint_name, 
+					tc.table_name, 
+					kcu.column_name, 
+					ccu.table_name AS foreign_table_name,
+					ccu.column_name AS foreign_column_name,
+					rc.delete_rule
+					FROM 
+					information_schema.table_constraints AS tc 
+					JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+					JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+					JOIN information_schema.referential_constraints AS rc ON ccu.constraint_name = rc.constraint_name
+					WHERE constraint_type = 'FOREIGN KEY' AND tc.table_catalog=current_database()
+					AND tc.table_name = '$tableNoQ' 
+					AND ccu.table_name = '$targetTableNoQ'
+					AND kcu.column_name = '$columnNoQ'
+					AND ccu.column_name = '$targetColumnNoQ'
+					";
+	
+			
+			$row = $this->adapter->getRow($sql);
+			
+			$flagAddKey = false;
+			
+			if (!$row) $flagAddKey = true;
+			
+			if ($row) { 
+				if (($row['delete_rule']=='SET NULL' && $isDep) || 
+					($row['delete_rule']!='SET NULL' && !$isDep)) {
+					//delete old key
+					$flagAddKey = true; //and order a new one
+					$cName = $row['constraint_name'];
+					$sql = "ALTER TABLE $table DROP CONSTRAINT $cName ";
+					$this->adapter->exec($sql);
+				} 
+				
 			}
-		}
-		catch(Exception $e){
+			
+			if ($flagAddKey) {
+			$delRule = ($isDep ? 'CASCADE' : 'SET NULL');	
+			$this->adapter->exec("ALTER TABLE  $table
+					ADD FOREIGN KEY (  $column ) REFERENCES  $targetTable (
+					$targetColumn) ON DELETE $delRule ON UPDATE SET NULL DEFERRABLE ;");
+					return true;
+			}
 			return false;
+			
 		}
+		catch(Exception $e){ return false; }
 	}
 
 
@@ -342,15 +417,14 @@ where table_schema = 'public'" );
 	 * @param string			  $table2    table2
 	 * @param string			  $property1 property1
 	 * @param string			  $property2 property2
-	 * @param boolean			  $dontCache want to have cache?
 	 *
 	 * @return boolean $succes whether the constraint has been applied
 	 */
-	protected function constrain($table, $table1, $table2, $property1, $property2, $dontCache) {
+	protected function constrain($table, $table1, $table2, $property1, $property2) {
 		try{
 			$writer = $this;
 			$adapter = $this->adapter;
-			$fkCode = "fk".md5($table.$property1.$property2);
+			$fkCode = 'fk'.md5($table.$property1.$property2);
 			$sql = "
 						SELECT
 								c.oid,
@@ -374,12 +448,6 @@ where table_schema = 'public'" );
 
 			$rows = $adapter->get( $sql );
 			if (!count($rows)) {
-
-				$table = $writer->getFormattedTableName($table);
-				$table1 = $writer->getFormattedTableName($table1);
-				$table2 = $writer->getFormattedTableName($table2);
-
-				if (!$dontCache) $this->fkcache[ $fkCode ] = true;
 				$sql1 = "ALTER TABLE \"$table\" ADD CONSTRAINT
 						  {$fkCode}a FOREIGN KEY ($property1)
 							REFERENCES \"$table1\" (id) ON DELETE CASCADE ";
@@ -391,19 +459,14 @@ where table_schema = 'public'" );
 			}
 			return true;
 		}
-		catch(Exception $e){
-			return false;
-		}
+		catch(Exception $e){ return false; }
 	}
 
 	/**
 	 * Removes all tables and views from the database.
 	 */
 	public function wipeAll() {
-
-
       	$this->adapter->exec('SET CONSTRAINTS ALL DEFERRED');
-      	//$this->adapter->startTransaction();
       	foreach($this->getTables() as $t) {
       		$t = $this->noKW($t);
 	 		try{
@@ -415,9 +478,7 @@ where table_schema = 'public'" );
 	 		}
 	 		catch(Exception $e){  throw $e; }
 		}
-		//$this->adapter->commit();
 		$this->adapter->exec('SET CONSTRAINTS ALL IMMEDIATE');
-
 	}
 
 }

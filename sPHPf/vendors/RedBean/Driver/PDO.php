@@ -1,14 +1,14 @@
 <?php
 /**
  * PDO Driver
- * @file				RedBean/PDO.php
- * @description	PDO Driver
- *						This Driver implements the RedBean Driver API
- * @author			Desfrenes
- * @license			BSD
+ * @file			RedBean/PDO.php
+ * @description		PDO Driver
+ *					This Driver implements the RedBean Driver API
+ * @author			Gabor de Mooij and the RedBeanPHP Community, Desfrenes
+ * @license			BSD/GPLv2
  *
  *
- * (c) Desfrenes & Gabor de Mooij
+ * (c) copyright Desfrenes & Gabor de Mooij and the RedBeanPHP community
  * This source file is subject to the BSD/GPLv2 License that is bundled
  * with this source code in the file license.txt.
  *
@@ -17,92 +17,66 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 
 
 	/**
-	 * @var string
 	 * Contains database DSN for connecting to database.
+	 * @var string
 	 */
-	private $dsn;
-
+	protected $dsn;
+	
 	/**
-	 * @var RedBean_Driver_PDO
-	 * Holds the instance of this class.
-	 */
-	private static $instance;
-
-	/**
-	 * @var boolean
 	 * Whether we are in debugging mode or not.
+	 * @var boolean
 	 */
-	private $debug = false;
+	protected $debug = false;
 
 	/**
-	 * @var PDO
+	 * Holds an instance of ILogger implementation.
+	 * @var RedBean_ILogger
+	 */
+	protected $logger = NULL;
+
+	/**
 	 * Holds the PDO instance.
+	 * @var PDO
 	 */
-	private $pdo;
+	protected $pdo;
 
 	/**
-	 * @var integer
 	 * Holds integer number of affected rows from latest query
 	 * if driver supports this feature.
+	 * @var integer
 	 */
-	private $affected_rows;
+	protected $affected_rows;
 
 	/**
-	 * @var resource
 	 * Holds result resource.
+	 * @var integer
 	 */
-	private $rs;
+	protected $rs;
+
 
 	/**
-	 * @var boolean
-	 * Flag, indicates whether SQL execution has taken place.
-	 */
-	private $exc =0;
-
-	/**
-	 * @var array
 	 * Contains arbitrary connection data.
-	 *
+	 * @var array
 	 */
-	private $connectInfo = array();
+	protected $connectInfo = array();
 
 
 	/**
-	 * @var bool
 	 * Whether you want to use classic String Only binding -
 	 * backward compatibility.
+	 * @var bool
 	 */
 	public $flagUseStringOnlyBinding = false;
 
 	/**
-	 *
-	 * @var boolean
-	 *
 	 * Whether we are currently connected or not.
 	 * This flag is being used to delay the connection until necessary.
 	 * Delaying connections is a good practice to speed up scripts that
 	 * don't need database connectivity but for some reason want to
 	 * init RedbeanPHP.
+	 * @var boolean
 	 */
-	private $isConnected = false;
-
-
-	/**
-	 * Returns an instance of the PDO Driver.
-	 *
-	 * @param string $dsn    Database connection string
-	 * @param string $user   DB account to be used
-	 * @param string $pass   password
-	 * @param string $dbname name of the database you
-	 *
-	 * @return RedBean_Driver_PDO $pdo	  PDO wrapper instance
-	 */
-	public static function getInstance($dsn, $user, $pass, $dbname) {
-		if(is_null(self::$instance)) {
-			self::$instance = new RedBean_Driver_PDO($dsn, $user, $pass);
-		}
-		return self::$instance;
-	}
+	protected $isConnected = false;
 
 	/**
 	 * Constructor. You may either specify dsn, user and password or
@@ -117,7 +91,7 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 	 *
 	 * @return void
 	 */
-	public function __construct($dsn, $user = NULL, $pass = NULL) {
+	public function __construct($dsn, $user = null, $pass = null) {
 		if ($dsn instanceof PDO) {
 			$this->pdo = $dsn;
 			$this->isConnected = true;
@@ -128,7 +102,7 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 			$this->dsn = $this->getDatabaseType();
 		} else {
 			$this->dsn = $dsn;
-			$this->connectInfo = array( "pass"=>$pass, "user"=>$user );
+			$this->connectInfo = array( 'pass'=>$pass, 'user'=>$user );
 		}
 	}
 
@@ -142,10 +116,9 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 	 * @return void
 	 */
 	public function connect() {
-
 		if ($this->isConnected) return;
-		$user = $this->connectInfo["user"];
-		$pass = $this->connectInfo["pass"];
+		$user = $this->connectInfo['user'];
+		$pass = $this->connectInfo['pass'];
 		//PDO::MYSQL_ATTR_INIT_COMMAND
 		$this->pdo = new PDO(
 				  $this->dsn,
@@ -157,7 +130,7 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 
 				  )
 		);
-		$this->pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, TRUE);
+		$this->pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
 		$this->isConnected = true;
 	}
 
@@ -177,7 +150,8 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 
 				if (is_null($value)){
 					$s->bindValue($key+1,null,PDO::PARAM_NULL);
-				}elseif (!$this->flagUseStringOnlyBinding && RedBean_QueryWriter_AQueryWriter::canBeTreatedAsInt($value) && $value < 2147483648) {
+				}
+				elseif (!$this->flagUseStringOnlyBinding && RedBean_QueryWriter_AQueryWriter::canBeTreatedAsInt($value) && $value < 2147483648) {
 					$s->bindParam($key+1,$value,PDO::PARAM_INT);
 				}
 				else {
@@ -185,7 +159,6 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 				}
 			}
 			else {
-
 				if (is_null($value)){
 					$s->bindValue($key,null,PDO::PARAM_NULL);
 				}
@@ -200,6 +173,50 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 		}
 	}
 
+	/**
+	 * Runs a query. Internal function, available for subclasses. This method
+	 * runs the actual SQL query and binds a list of parameters to the query.
+	 * slots. The result of the query will be stored in the protected property
+	 * $rs (always array). The number of rows affected (result of rowcount, if supported by database)
+	 * is stored in protected property $affected_rows. If the debug flag is set
+	 * this function will send debugging output to screen buffer.
+	 * 
+	 * @throws RedBean_Exception_SQL 
+	 * 
+	 * @param string $sql     the SQL string to be send to database server
+	 * @param array  $aValues the values that need to get bound to the query slots
+	 */
+	protected function runQuery($sql,$aValues) {
+		$this->connect();
+		if ($this->debug && $this->logger) {
+			$this->logger->log($sql, $aValues);
+		}
+		try {
+			if (strpos('pgsql',$this->dsn)===0) {
+				$s = $this->pdo->prepare($sql, array(PDO::PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT => true));
+			}
+			else {
+				$s = $this->pdo->prepare($sql);
+			}
+			$this->bindParams( $s, $aValues );
+			$s->execute();
+			$this->affected_rows = $s->rowCount();
+			if ($s->columnCount()) {
+		    	$this->rs = $s->fetchAll();
+		    	if ($this->debug && $this->logger) $this->logger->log('resultset: ' . count($this->rs) . ' rows');
+	    	}
+		  	else {
+		    	$this->rs = array();
+		  	}
+		}catch(PDOException $e) {
+			//Unfortunately the code field is supposed to be int by default (php)
+			//So we need a property to convey the SQL State code.
+			$x = new RedBean_Exception_SQL( $e->getMessage(), 0);
+			$x->setSQLState( $e->getCode() );
+			throw $x;
+		}
+	}
+
 
 	/**
 	 * Runs a query and fetches results as a multi dimensional array.
@@ -209,49 +226,8 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 	 * @return array $results result
 	 */
 	public function GetAll( $sql, $aValues=array() ) {
-		$this->connect();
-		$this->exc = 0;
-		if ($this->debug) {
-			echo "<HR>" . $sql.print_r($aValues,1);
-		}
-		try {
-			if (strpos("pgsql",$this->dsn)===0) {
-				$s = $this->pdo->prepare($sql, array(PDO::PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT => true));
-			}
-			else {
-				$s = $this->pdo->prepare($sql);
-			}
-			$this->bindParams( $s, $aValues );
-			$s->execute();
-			$this->affected_rows=$s->rowCount();
-		  	if ($s->columnCount()) {
-		    	$this->rs = $s->fetchAll();
-	    	}
-		  	else {
-		    	$this->rs = null;
-		  	}
-			$rows = $this->rs;
-		}catch(PDOException $e) {
-			//Unfortunately the code field is supposed to be int by default (php)
-			//So we need a property to convey the SQL State code.
-			if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-				$x = new RedBean_Exception_SQL( $e->getMessage(), 0);
-			}
-			else {
-				$x = new RedBean_Exception_SQL( $e->getMessage(), 0, $e );
-			}
-			$x->setSQLState( $e->getCode() );
-			throw $x;
-		}
-		if(!$rows) {
-			$rows = array();
-		}
-		if ($this->debug) {
-			if (count($rows) > 0) {
-				echo "<br><b style='color:green'>resultset: " . count($rows) . " rows</b>";
-			}
-		}
-		return $rows;
+		$this->runQuery($sql,$aValues);
+		return $this->rs;
 	}
 
 	 /**
@@ -262,8 +238,6 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 	 * @return array	$results Resultset
 	 */
 	public function GetCol($sql, $aValues=array()) {
-		$this->connect();
-		$this->exc = 0;
 		$rows = $this->GetAll($sql,$aValues);
 		$cols = array();
 		if ($rows && is_array($rows) && count($rows)>0) {
@@ -282,8 +256,6 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 	 * @return mixed $cellvalue result cell
 	 */
 	public function GetCell($sql, $aValues=array()) {
-		$this->connect();
-		$this->exc = 0;
 		$arr = $this->GetAll($sql,$aValues);
 		$row1 = array_shift($arr);
 		$col1 = array_shift($row1);
@@ -299,37 +271,11 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 	 * @return array $row result row
 	 */
 	public function GetRow($sql, $aValues=array()) {
-		$this->connect();
-		$this->exc = 0;
 		$arr = $this->GetAll($sql, $aValues);
 		return array_shift($arr);
 	}
 
-	/**
-	 * Returns the error constant of the most
-	 * recent error.
-	 *
-	 * @return mixed $error error code
-	 */
-	public function ErrorNo() {
-		$this->connect();
-		if (!$this->exc) return 0;
-		$infos = $this->pdo->errorInfo();
-		return $infos[1];
-	}
-
-	/**
-	 * Returns the error message of the most recent
-	 * error.
-	 *
-	 * @return string $message error message
-	 */
-	public function Errormsg() {
-		$this->connect();
-		if (!$this->exc) return "";
-		$infos = $this->pdo->errorInfo();
-		return $infos[2];
-	}
+	
 
 	/**
 	 * Executes SQL code and allows key-value binding.
@@ -347,35 +293,8 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 	 * @return void
 	 */
 	public function Execute( $sql, $aValues=array() ) {
-		$this->connect();
-		$this->exc = 0;
-		if ($this->debug) {
-			echo "<HR>" . $sql.print_r($aValues,1);
-		}
-		try {
-			if (strpos("pgsql",$this->dsn)===0) {
-				$s = $this->pdo->prepare($sql, array(PDO::PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT => true));
-			}
-			else {
-				$s = $this->pdo->prepare($sql);
-			}
-			$this->bindParams( $s, $aValues );
-			$s->execute();
-			$this->affected_rows=$s->rowCount();
-			return $this->affected_rows;
-		}
-		catch(PDOException $e) {
-			//Unfortunately the code field is supposed to be int by default (php)
-			//So we need a property to convey the SQL State code.
-			if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-				$x = new RedBean_Exception_SQL( $e->getMessage(), 0);
-			}
-			else {
-				$x = new RedBean_Exception_SQL( $e->getMessage()." SQL:".$sql, 0, $e );
-			}
-			$x->setSQLState( $e->getCode() );
-			throw $x;
-		}
+		$this->runQuery($sql,$aValues);
+		return $this->affected_rows;
 	}
 
 	/**
@@ -420,25 +339,39 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 	 * passes on to the screen for inspection.
 	 * This method has no return value.
 	 *
+	 * Additionally you can inject RedBean_ILogger implementation
+	 * where you can define your own log() method
+	 *
 	 * @param boolean $trueFalse turn on/off
+	 * @param RedBean_ILogger $logger 
 	 *
 	 * @return void
 	 */
-	public function setDebugMode( $tf ) {
+	public function setDebugMode( $tf, $logger = NULL ) {
 		$this->connect();
 		$this->debug = (bool)$tf;
+		if ($this->debug and !$logger) $logger = new RedBean_Logger();
+		$this->setLogger($logger);
+	}
+
+
+	/**
+	 * Injects RedBean_ILogger object.
+	 *
+	 * @param RedBean_ILogger $logger
+	 */
+	public function setLogger( RedBean_ILogger $logger ) {
+		$this->logger = $logger;
 	}
 
 	/**
-	 * Returns a raw result resource from the underlying PDO driver.
+	 * Gets RedBean_ILogger object.
 	 *
-	 * @return Resource $PDOResult PDO result resource object
+	 * @return RedBean_ILogger
 	 */
-	public function GetRaw() {
-		$this->connect();
-		return $this->rs;
+	public function getLogger() {
+		return $this->logger;
 	}
-
 
 	/**
 	 * Starts a transaction.
@@ -517,6 +450,25 @@ class RedBean_Driver_PDO implements RedBean_Driver {
 		$this->connect();
 		return $this->pdo;
 	}
-
+	
+	/**
+	 * Closes database connection by destructing PDO.
+	 */
+	public function close() {
+		$this->pdo = null;
+		$this->isConnected = false;
+	}
+	
+	/**
+	 * Returns TRUE if the current PDO instance is connected.
+	 * 
+	 * @return boolean $yesNO 
+	 */
+	public function isConnected() {
+		if (!$this->isConnected && !$this->pdo) return false;
+		return true;
+	}
+	
+	
 }
 
