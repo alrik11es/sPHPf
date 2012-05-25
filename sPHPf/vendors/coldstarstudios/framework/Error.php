@@ -45,7 +45,7 @@ class Error {
                 $no_production_view->renderView();
             
         } catch (\Exception $z) {
-            echo "Error message: #".$z->getCode()." ---- ".$z->getMessage()." ".$z->getFile();
+            echo "Error message: #".$this->exception->getCode()." ---- ".$this->exception->getMessage()." ".$this->exception->getFile();
         }
     }
 }
