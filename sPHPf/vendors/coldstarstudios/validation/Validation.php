@@ -23,10 +23,14 @@ class Validation {
      * @param string $message 
      */
     function isEmpty($param, $message){
-        if(empty($param)){
-            $this->isValid = false;
-            array_push($this->errors, array('message'=>$message));
-        }
+        if(!$this->isValid)
+            return false;
+            
+        if($this->isValid)
+            if(empty($param)){
+                $this->isValid = false;
+                array_push($this->errors, array('message'=>$message));
+            }
     }
     
     /**
@@ -35,6 +39,9 @@ class Validation {
      * @param boolean $condition
      */
     function generic($message, $condition = null){
+        if(!$this->isValid)
+            return false;
+            
         if($condition != null)
             $condition = $condition;
         else
@@ -55,6 +62,9 @@ class Validation {
      * @param string $message_mime 
      */
     function file($param, $mime, $size, $message_size, $message_mime){
+        if(!$this->isValid)
+            return false;
+            
         if(!empty($param['tmp_name'])){
             if($param['size'] > $size) {
                 $this->isValid = false;
@@ -75,6 +85,9 @@ class Validation {
      * @param type $message 
      */
     function equal($param1, $param2, $message){
+        if(!$this->isValid)
+            return false;
+            
         if($param1 != $param2) {
             $this->isValid = false;
             array_push($this->errors, array('message'=>$message));
@@ -88,6 +101,9 @@ class Validation {
      * @param string $message 
      */
     function minLength($param, $length, $message){
+        if(!$this->isValid)
+            return false;
+            
         if(strlen($param) < $length) {
             $this->isValid = false;
             array_push($this->errors, array('message'=>$message));
@@ -101,6 +117,9 @@ class Validation {
      * @param string $message 
      */
     function maxLength($param, $length, $message){
+        if(!$this->isValid)
+            return false;
+            
         if(strlen($param) > $length) {
             $this->isValid = false;
             array_push($this->errors, array('message'=>$message));
@@ -117,6 +136,9 @@ class Validation {
      * @param type $message 
      */
     function email($param, $message){
+        if(!$this->isValid)
+            return false;
+            
         if(empty($param) || !Email::validate($param)){
             $this->isValid = false;
             array_push($this->errors, array('message'=>$message));
@@ -129,6 +151,9 @@ class Validation {
      * @param type $message 
      */
     function telephone($param, $message){
+        if(!$this->isValid)
+            return false;
+            
         $match = '/^((\+)?(\d{2})[-])?(([\(])?((\d){3,5})([\)])?[-])|(\d{3,5})(\d{5,8}){1}?$/';
         $answer = preg_match($match, $param);
         if(empty($param) || !$answer){
