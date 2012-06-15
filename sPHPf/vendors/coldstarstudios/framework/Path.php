@@ -25,10 +25,10 @@ class Path {
             
             $path .= $_SERVER['HTTP_HOST'];
             $clean = preg_split("/\?/", $_SERVER['REQUEST_URI']);
+            
+            $page = str_replace('/', '\/', $page);
             $path .= preg_replace('/'.$page.'$/', '', $clean[0]);
             
-            //$_SERVER['QUERY_STRING'] = str_replace('/', '\/', $_SERVER['QUERY_STRING']);
-            //$path = preg_replace('/'.$_SERVER['QUERY_STRING'].'$/', '', $path);
             $path = str_replace($_SERVER['QUERY_STRING'], '', $path);
             $path = str_replace('index.php', '', $path);
             
