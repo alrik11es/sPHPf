@@ -63,7 +63,7 @@ class Response implements interfaces\Response{
     
     function twigRender(){
         $template = $this->twig->loadTemplate($this->view);
-        echo $template->render($this->vars);
+        echo self::minify($template->render($this->vars));
     }
     
     function phpRender(){
@@ -74,6 +74,13 @@ class Response implements interfaces\Response{
             if(file_exists($folder.'/'.$this->view))
                 include($folder.'/'.$this->view);
         }
+    }
+    
+    static function minify($input){
+        $input = preg_replace("%[ \n\r]//.+[\r\n]%","", $input);
+        $input = str_replace("\n", "", $input);
+        $input = preg_replace('/[ ]{3,}/', ' ', $input);
+        return $input;
     }
     
     function __toString(){

@@ -23,11 +23,10 @@ class Validation {
      * @param string $message 
      */
     function isEmpty($param, $message){
-        if($this->isValid)
-            if(empty($param)){
-                $this->isValid = false;
-                array_push($this->errors, array('message'=>$message));
-            }
+        if(empty($param)){
+            $this->isValid = false;
+            array_push($this->errors, array('message'=>$message));
+        }
     }
     
     /**
