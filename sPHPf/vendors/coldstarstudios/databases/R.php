@@ -16,5 +16,19 @@ class R extends \RedBean_Facade{
         if(count($t) > 0)
             return true;
         return false;
-    }    
+    }
+    
+    /**
+     * Check if the $array exists in $sql on $entity
+     * @param string $entity
+     * @param string $sql
+     * @param any $array
+     * @return boolean 
+     */
+    static function findExists($entity, $sql, $array){
+        $t = R::find($entity, $sql, $array);
+        if(count($t) > 0)
+            return true;
+        return false;
+    }
 }
