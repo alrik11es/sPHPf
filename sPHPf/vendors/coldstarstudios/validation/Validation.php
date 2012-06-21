@@ -111,6 +111,13 @@ class Validation {
         
     }
     
+    function numericRange($param, $max, $min, $message){
+        if($param > $max || $param < $min) {
+            $this->isValid = false;
+            array_push($this->errors, array('message'=>$message));
+        }
+    }
+    
     /**
      * Check if email is RFC 2822 Compliant
      * @param type $param

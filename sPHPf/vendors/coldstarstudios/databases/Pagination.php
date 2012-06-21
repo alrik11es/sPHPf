@@ -63,7 +63,7 @@ class Pagination{
      * $actual_count means the count of elements this time, to know if
      * the next button must appear or not.
      */
-    function simpleFooter($actual_count){
+    function simpleFooter(){
         $pagination = '';
         if(preg_match('/\?/', $this->page))
             $separator = '&';
