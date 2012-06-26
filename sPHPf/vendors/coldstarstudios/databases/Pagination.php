@@ -75,7 +75,6 @@ class Pagination{
             $pagination .= "<input type=\"button\" onclick=\"window.location='$this->page$separator$this->var_name=$fl';\" value=\"$this->before_term\">";
         }
         
-        echo $this->start_num + $this->reg_num .' ++++++++ '.$this->total;
         if($this->start_num + $this->reg_num + $results_in_page < $this->total){
             $fr = $this->start_num + $this->reg_num;
             $pagination .= "<input type=\"button\" onclick=\"window.location='$this->page$separator$this->var_name=$fr';\" value=\"$this->next_term\">";
