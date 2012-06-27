@@ -61,7 +61,7 @@ class Validation {
                 array_push($this->errors, array('message'=>$message_size));
             }
 
-            if(!\coldstarstudios\uploads\Upload::validateMimeType($param['type'], $types)) {
+            if(!\coldstarstudios\uploads\Upload::validateMimeType($param['type'], $mime)) {
                 $this->isValid = false;
                 array_push($this->errors, array('message'=>$message_mime));
             }
