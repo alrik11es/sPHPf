@@ -16,6 +16,10 @@ v 1.2.2
 - Added debug var to the Autoloader.php
 - It's possible now to echo a response or whatever.
 - RedBean updated to v3.2
+- Corrected errors in pagination files.
+- Added numeric range validation
+- Added new options to R:: all about knowing if a row exist or not
+- The validation of telephone and email is not required, but must be well typed.
 
 v 1.2.1
 

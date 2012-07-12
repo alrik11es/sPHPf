@@ -124,7 +124,7 @@ class Validation {
      * @param type $message 
      */
     function email($param, $message){
-        if(empty($param) || !Email::validate($param)){
+        if(!empty($param) && !Email::validate($param)){
             $this->isValid = false;
             array_push($this->errors, array('message'=>$message));
         }
@@ -138,7 +138,7 @@ class Validation {
     function telephone($param, $message){
         $match = '/^((\+)?(\d{2})[-])?(([\(])?((\d){3,5})([\)])?[-])|(\d{3,5})(\d{5,8}){1}?$/';
         $answer = preg_match($match, $param);
-        if(empty($param) || !$answer){
+        if(!empty($param) && !$answer){
             $this->isValid = false;
             array_push($this->errors, array('message'=>$message));
         }

@@ -77,9 +77,9 @@ class Response implements interfaces\Response{
     }
     
     static function minify($input){
-        $input = preg_replace("%[ \n\r]//.+[\r\n]%","", $input);
+        /*$input = preg_replace("%[ \n\r]//.+[\r\n]%","", $input);
         $input = str_replace("\n", "", $input);
-        $input = preg_replace('/[ ]{3,}/', ' ', $input);
+        $input = preg_replace('/[ ]{3,}/', ' ', $input);*/
         return $input;
     }
     
