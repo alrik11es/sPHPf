@@ -20,6 +20,7 @@ v 1.2.2
 - Added numeric range validation
 - Added new options to R:: all about knowing if a row exist or not
 - The validation of telephone and email is not required, but must be well typed.
+- Fixed pagination button and added btn class.
 
 v 1.2.1
 
