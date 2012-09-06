@@ -13,6 +13,7 @@ class Validation {
     
     public $isValid = true;
     public $errors = array();
+    private $count = 0;
     
     // Temporary condition for generic checks.
     public $condition;
@@ -23,9 +24,10 @@ class Validation {
      * @param string $message 
      */
     function isEmpty($param, $message){
+        $this->count++;
         if(empty($param)){
             $this->isValid = false;
-            array_push($this->errors, array('message'=>$message));
+            array_push($this->errors, array('id'=>$this->count, 'message'=>$message));
         }
     }
     
@@ -35,6 +37,7 @@ class Validation {
      * @param boolean $condition
      */
     function generic($message, $condition = null){
+        $this->count++;
         if($condition != null)
             $condition = $condition;
         else
@@ -42,7 +45,7 @@ class Validation {
         
         if($condition){
             $this->isValid = false;
-            array_push($this->errors, array('message'=>$message));
+            array_push($this->errors, array('id'=>$this->count, 'message'=>$message));
         }
     }
 
@@ -55,15 +58,16 @@ class Validation {
      * @param string $message_mime 
      */
     function file($param, $mime, $size, $message_size, $message_mime){
+        $this->count++;
         if(!empty($param['tmp_name'])){
             if($param['size'] > $size) {
                 $this->isValid = false;
-                array_push($this->errors, array('message'=>$message_size));
+                array_push($this->errors, array('id'=>$this->count, 'message'=>$message_size));
             }
 
             if(!\coldstarstudios\uploads\Upload::validateMimeType($param['type'], $mime)) {
                 $this->isValid = false;
-                array_push($this->errors, array('message'=>$message_mime));
+                array_push($this->errors, array('id'=>$this->count, 'message'=>$message_mime));
             }
         }
     }
@@ -75,9 +79,10 @@ class Validation {
      * @param type $message 
      */
     function equal($param1, $param2, $message){
+        $this->count++;
         if($param1 != $param2) {
             $this->isValid = false;
-            array_push($this->errors, array('message'=>$message));
+            array_push($this->errors, array('id'=>$this->count, 'message'=>$message));
         }
     }
     
@@ -88,9 +93,10 @@ class Validation {
      * @param string $message 
      */
     function minLength($param, $length, $message){
+        $this->count++;
         if(strlen($param) < $length) {
             $this->isValid = false;
-            array_push($this->errors, array('message'=>$message));
+            array_push($this->errors, array('id'=>$this->count, 'message'=>$message));
         }
     }
     
@@ -101,20 +107,23 @@ class Validation {
      * @param string $message 
      */
     function maxLength($param, $length, $message){
+        $this->count++;
         if(strlen($param) > $length) {
             $this->isValid = false;
-            array_push($this->errors, array('message'=>$message));
+            array_push($this->errors, array('id'=>$this->count, 'message'=>$message));
         }
     }
     
     function dateRange($param1, $param2, $message){
+        $this->count++;
         
     }
     
     function numericRange($param, $max, $min, $message){
+        $this->count++;
         if($param > $max || $param < $min) {
             $this->isValid = false;
-            array_push($this->errors, array('message'=>$message));
+            array_push($this->errors, array('id'=>$this->count, 'message'=>$message));
         }
     }
     
@@ -124,9 +133,10 @@ class Validation {
      * @param type $message 
      */
     function email($param, $message){
+        $this->count++;
         if(!empty($param) && !Email::validate($param)){
             $this->isValid = false;
-            array_push($this->errors, array('message'=>$message));
+            array_push($this->errors, array('id'=>$this->count, 'message'=>$message));
         }
     }
     
@@ -136,11 +146,12 @@ class Validation {
      * @param type $message 
      */
     function telephone($param, $message){
+        $this->count++;
         $match = '/^((\+)?(\d{2})[-])?(([\(])?((\d){3,5})([\)])?[-])|(\d{3,5})(\d{5,8}){1}?$/';
         $answer = preg_match($match, $param);
         if(!empty($param) && !$answer){
             $this->isValid = false;
-            array_push($this->errors, array('message'=>$message));
+            array_push($this->errors, array('id'=>$this->count, 'message'=>$message));
         }
     }
 }
