@@ -1,5 +1,9 @@
 sPHPf (Simple PHP Framework)
 ============================
+
+### NOTE: This framework is Outdated please refer to FuelPHP to find a framework with all this features and much more.
+--
+
 ### Making your life simple and better.
 
 sPHPf is a PHP 5.3 based framework that allows you to initiate a fast developement
